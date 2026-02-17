@@ -1,0 +1,2492 @@
+/*******************************************************************************
+ * Markdown Preview Enhanced (VS Code Extension)
+ *
+ * To customize the style:
+ *  - Run command: `Markdown Preview Enhanced: Customize CSS`
+ *  - This opens the `style.less` file where you can override existing styles
+ *  - Default file location:
+ *    - Windows: `%USERPROFILE%/.crossnote/style.less`
+ *
+ * For more information, visit:
+ *  - https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css
+ ******************************************************************************/
+/*******************************************************************************
+ * Custom Theme for Markdown Preview Enhanced
+ *  - Author: midvok
+ *  - Update: 2026-02-17
+ *  - URL: https://github.com/midvok/markdown-preview-theme
+ *
+ * Custom classes for the markdown front-matter:
+ *  `sans`, `serif`, `mono`     Override the document font family
+ *  `fs12px` .. `fs16px`        Override the document font size
+ *  `[no]centerimg`             Toggle image centering
+ *  `[no]centertable`           Toggle table centering
+ *  `[no]colorhead`             Toggle colorful headings
+ *  `headnum-h1`                Add heading numbering (starting from H1)
+ *  `headnum[-h2]`              Add heading numbering (starting from H2)
+ *  `wrapcode`                  Wrap long lines in code blocks
+ *  `simple-table`              Apply simplified table styling
+ *  `[x][y][xy][no]line-table`  Control which internal borders appear in tables
+ *  `nohead-table`              Hide the table header row
+ *  `dense-table `              Reduce table cell padding
+ *
+ * Utility classes for print style:
+ *  `page-break`      Enforce a page break before an element
+ *  `no-break`        Prevent an element from being split across pages
+ *  `keep-with-next`  Prevent an element from being separated from the following block
+ *
+ * Utility classes for layout control:
+ *  `cols-[n]`        Create a **multi-column** layout with `n` columns (up to 10)
+ *  `cols-rule`       Add vertical divider lines between columns
+ *  `nomark-list`     Remove list item markers
+ *  `grid-cols-[n]`   Create a **CSS grid** layout with `n` columns
+ *  `grid-cols-auto`  Create a **CSS grid** layout with `auto-fit` columns
+ *  `flex`            Apply a **Flexbox** container to child elements
+ ******************************************************************************/
+// Comment this line to disable the whole theme
+#enable-theme();
+
+// Custom classes that you can specify in the markdown front-matter
+#custom-classes();
+
+// Extra utility classes for Markdown content
+#markdown-utility-classes();
+
+// Select base text font family
+// {sans, serif, mono}
+@base-font: serif;
+
+// Import web fonts if not installed on your system
+// {true, false}
+@import-fonts: true;
+
+// Toggle colorful headings
+// {true, false}
+@colorful-headings: true;
+
+// Automatic heading numbering
+// {true, false}
+@heading-numbering: false;
+
+// Limit depth of the sidebar TOC tree
+// {2..6}
+@toc-depth: 3;
+
+// Single line TOC items with ellipsis overflow
+// {true, false}
+@toc-single-line: false;
+
+#enable-theme() {
+  /* === Setup Icons & Fonts === */
+  #import-icons();
+  #import-fonts(@base-font);
+  :root {
+    #set-fonts(@base-font);
+  }
+  #apply-body-root-fonts();
+
+  /* === Theme Colors === */
+  :root {
+    #set-theme-colors();
+  }
+
+  /* === Override Markdown Preview === */
+  .markdown-preview.markdown-preview {
+    #apply-base-fonts();
+    #apply-code-fonts();
+    #apply-text-colors();
+    #apply-syntax-colors();
+
+    // Preview style
+    #style--base-text();
+    #style--lists();
+    #style--images();
+    #style--math();
+    #style--code-blocks();
+    #style--blockquotes();
+    #style--callouts();
+    #style--tables();
+
+    // Extra styles
+    #extra--table-styles();
+    #extra--colorful-headings();
+    #extra--dividers();
+    #extra--tooltips();
+    #extra--heading-numbering();
+  }
+
+  /* === Print Style === */
+  #print-style();
+
+  /* === Override Extension UI === */
+  #override-ui();
+  #override-panels();
+  #override-toc(@toc-depth, @toc-single-line);
+
+  /* === HTML Export === */
+  #html-export();
+}
+
+//==============================================================================
+// Custom classes that you can specify in the markdown front-matter:
+// ---
+// class: "serif headnum nocolorhead"
+// ---
+// These classes are appended to the `markdown-preview` container.
+//==============================================================================
+#custom-classes() {
+  /* === Custom Classes === */
+  .markdown-preview.markdown-preview {
+    // === Set font family ===
+    &.sans {
+      #set-sans-family(@sans-font);
+    }
+    &.serif {
+      #set-serif-family(@serif-font);
+    }
+    &.mono {
+      #set-mono-family(@mono-font);
+    }
+
+    // === Set font size ===
+    &.fs12px {
+      .set-font-size(12px);
+    }
+    &.fs13px {
+      .set-font-size(13px);
+    }
+    &.fs14px {
+      .set-font-size(14px);
+    }
+    &.fs15px {
+      .set-font-size(15px);
+    }
+    &.fs16px {
+      .set-font-size(16px);
+    }
+    .set-font-size(@fs) {
+      --font-size: @fs;
+      --code-font-size: 0.9285714286em;
+    }
+
+    // === Align tables ===
+    &.centertable {
+      table {
+        display: table;
+        width: auto;
+        margin-inline: auto;
+      }
+    }
+    &.nocentertable {
+      table {
+        width: auto;
+        margin-inline: 0;
+      }
+    }
+
+    // === Align images ===
+    &.centerimg {
+      img {
+        display: block;
+        margin-inline: auto;
+      }
+    }
+    &.nocenterimg {
+      img {
+        margin-inline: 0;
+      }
+    }
+
+    // === Colorful Headings ===
+    &.colorhead {
+      #heading-colors(true);
+      #dividers(true);
+    }
+    &.nocolorhead {
+      #heading-colors(false);
+      #dividers(false);
+    }
+
+    // === Heading numbering ===
+    &.headnum-h1 {
+      #heading-numbering(1);
+    }
+    &.headnum,
+    &.headnum-h2 {
+      #heading-numbering(2);
+    }
+
+    // === Wrap code boxes ===
+    &.wrapcode {
+      pre {
+        white-space: pre-line;
+      }
+    }
+
+    // === Table styles ===
+    #extra--table-styles(~"&");
+  }
+}
+
+//==============================================================================
+// Extra utility classes for Markdown content
+//==============================================================================
+#markdown-utility-classes() {
+  .markdown-preview.markdown-preview {
+    #column-layout();
+    #grid-layout();
+    #flex-layout();
+  }
+}
+
+// === Column Layout ===
+#column-layout() {
+  each(range(10), {
+    .cols-@{value} {
+      column-count: @value;
+    }
+  });
+
+  [class^="cols-"],
+  [class*=" cols-"],
+  [style*="column-count"] {
+    margin-block: 1rem 2rem;
+    column-gap: 1.5rem;
+
+    > :first-child {
+      margin-top: 0;
+    }
+    > ul > li:first-child {
+      margin-top: 0;
+    }
+    ul {
+      margin: 0;
+    }
+    img {
+      margin-block: 0 1rem;
+    }
+  }
+
+  .cols-rule {
+    column-rule: 1px dashed var(--border-divider);
+  }
+  .cols-rule.nomark-list {
+    column-gap: 1rem;
+  }
+}
+
+// === Grid Layout ===
+#grid-layout() {
+  each(range(10), {
+    .grid-cols-@{value} {
+      grid-template-columns: ~"repeat(@{value}, 1fr)";
+    }
+  });
+
+  .grid-cols-auto {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  [class^="grid-cols"],
+  [class*=" grid-cols"] {
+    display: grid;
+    align-items: start;
+    justify-items: start;
+
+    margin-block: 0.5rem 2rem;
+    gap: 0 1.5rem;
+
+    :is(h1, h2, h3, h4, h5, h6):first-child {
+      margin-block: 0.5rem;
+    }
+    p,
+    p + p {
+      margin-block: 0.5rem;
+    }
+    img {
+      margin-block: 0 0.5rem;
+    }
+    table {
+      margin-block: 0.75rem 1rem;
+    }
+  }
+}
+
+// === Flex Layout ===
+#flex-layout() {
+  [class^="flex"],
+  [class*=" flex"] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    margin-block: 0.5rem 2rem;
+    gap: 0 1.5rem;
+
+    :is(h1, h2, h3, h4, h5, h6):first-child {
+      margin-block: 0.5rem;
+    }
+    p,
+    p + p {
+      margin-block: 0.5rem;
+    }
+    table {
+      margin-block: 0.5rem 1rem;
+    }
+  }
+}
+
+//==============================================================================
+// ~~~ Import Icons ~~~
+// "Material Icons":
+//  - url("https://fonts.googleapis.com/icon?family=Material+Icons")
+//  - Problems with vertical alignment
+//
+// "Material Symbols Outlined":
+//  - Vertical alignment works fine
+//==============================================================================
+#import-icons() {
+  @import (css) url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0");
+
+  :root {
+    --icon-font-family: "Material Symbols Outlined";
+  }
+}
+
+//==============================================================================
+// ~~~ Setup Fonts ~~~
+// Sans-serif fonts:
+//  - MS: "Segoe Ui", Calibri
+//  - Free: "Noto Sans", "Open Sans", "Google Sans", "Source Sans 3",
+//    "IBM Plex Sans", "Public Sans", Nunito, Inter, Lato, Mulish, Roboto, Rubik
+//
+// Serif fonts:
+//  - MS: Cambria, "Times New Roman"
+//  - Free: "Noto Serif", "PT Serif"
+//
+// Monospaced fonts:
+//  - "Courier Prime", "DejaVu Sans Mono", "Fira Code", "JetBrains Mono",
+//    "Monaspace Neon", "Noto Sans Mono", Cascadia, Hack
+//==============================================================================
+// === Import Fonts ===
+#import-url(@font-url) when (@import-fonts=true) {
+  @import (css) url(@font-url);
+}
+
+// === Set Fonts ===
+#set-fonts(@family) when (@family=sans) {
+  #set-sans-family(@sans-font);
+}
+#set-fonts(@family) when (@family=serif) {
+  #set-serif-family(@serif-font);
+}
+#set-fonts(@family) when (@family=mono) {
+  #set-mono-family(@mono-font);
+}
+
+//==============================================================================
+// ~~~ Sans Fonts ~~~
+//==============================================================================
+// @sans-font: "Google Sans";
+// @sans-font: "IBM Plex Sans";
+// @sans-font: "Inter"; // **
+// @sans-font: "Mulish";
+// @sans-font: "Noto Sans";
+// @sans-font: "Nunito Sans";
+@sans-font: "Public Sans"; // ****
+// @sans-font: "Roboto"; // ***
+// @sans-font: "Source Sans 3"; // ****
+
+#import-family(@family) when (@family="Google Sans") {
+  // opsz@17 is the "text" font version for Google Sans
+  #import-url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17,400..700;1,17,400..700&display=swap");
+  #import-family("JetBrains Mono");
+}
+#import-family(@family) when (@family="IBM Plex Sans") {
+  #import-url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+  #import-family("Courier Prime");
+}
+#import-family(@family) when (@family="Inter") {
+  #import-url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+  #import-family("JetBrains Mono");
+}
+#import-family(@family) when (@family="Mulish") {
+  #import-url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+  #import-family("JetBrains Mono");
+}
+#import-family(@family) when (@family="Noto Sans") {
+  #import-url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+  #import-family("Courier Prime");
+}
+#import-family(@family) when (@family="Nunito Sans") {
+  #import-url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap");
+  #import-family("Courier Prime");
+}
+#import-family(@family) when (@family="Public Sans") {
+  #import-url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+  #import-family("JetBrains Mono");
+}
+#import-family(@family) when (@family="Roboto") {
+  #import-url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+  #import-family("JetBrains Mono");
+}
+#import-family(@family) when (@family="Source Sans 3") {
+  #import-url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+  #import-family("JetBrains Mono");
+}
+
+#import-fonts(@family) when (@family=sans) {
+  #import-family(@sans-font);
+}
+
+#set-sans-family(@font) when (@font="Google Sans") {
+  --font-family: "Google Sans", "Segoe UI", Calibri, sans-serif;
+  --font-size: 15px;
+  --ui-font-size: 14px;
+  --line-height: 1.6;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("JetBrains Mono");
+  --code-inline-font-size: 0.8666666667em;
+}
+#set-sans-family(@font) when (@font="IBM Plex Sans") {
+  --font-family: "IBM Plex Sans", "Segoe UI", Calibri, sans-serif;
+  --font-size: 14px;
+  --ui-font-size: 14px;
+  --line-height: 1.5;
+  --font-weight: 400;
+  --font-weight-bold: 500;
+  --font-weight-heading: 600;
+  #code-font("Courier Prime");
+  --code-inline-font-size: 0.9285714286em;
+  --code-inline-align: 0.03em;
+}
+#set-sans-family(@font) when (@font="Inter") {
+  --font-family: Inter, "Segoe UI", Calibri, sans-serif;
+  --font-size: 14px;
+  --ui-font-size: 14px;
+  --line-height: 1.7;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("JetBrains Mono");
+  --code-inline-font-size: 0.9285714286em;
+}
+#set-sans-family(@font) when (@font="Mulish") {
+  --font-family: Mulish, "Segoe UI", Calibri, sans-serif;
+  --font-size: 14px;
+  --ui-font-size: 14px;
+  --line-height: 1.7;
+  --font-weight: 400;
+  --font-weight-bold: 700;
+  #code-font("JetBrains Mono");
+  --code-inline-font-size: 0.8928571429em;
+}
+#set-sans-family(@font) when (@font="Noto Sans") {
+  --font-family: "Noto Sans", "Segoe UI", Calibri, sans-serif;
+  --font-size: 13px;
+  --ui-font-size: 13px;
+  --line-height: 1.75;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("Courier Prime");
+  --code-inline-font-size: 0.95em;
+  --code-inline-align: 0.03em;
+}
+#set-sans-family(@font) when (@font="Nunito Sans") {
+  --font-family: "Nunito Sans", "Segoe UI", Calibri, sans-serif;
+  --font-size: 14px;
+  --ui-font-size: 14px;
+  --line-height: 1.75;
+  --font-weight: 400;
+  --font-weight-bold: 700;
+  #code-font("Courier Prime");
+  --code-inline-font-size: 0.95em;
+  --code-inline-align: 0.03em;
+}
+#set-sans-family(@font) when (@font="Public Sans") {
+  --font-family: "Public Sans", "Segoe UI", Calibri, sans-serif;
+  --font-size: 14px;
+  --ui-font-size: 14px;
+  --line-height: 1.75;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("JetBrains Mono");
+  --code-inline-font-size: 0.8928571429em;
+}
+#set-sans-family(@font) when (@font="Roboto") {
+  --font-family: Roboto, "Segoe UI", Calibri, sans-serif;
+  --font-size: 14px;
+  --ui-font-size: 14px;
+  --line-height: 1.75;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("JetBrains Mono");
+  --code-inline-font-size: 0.8928571429em;
+}
+#set-sans-family(@font) when (@font="Source Sans 3") {
+  --font-family: "Source Sans 3", "Segoe UI", Calibri, sans-serif;
+  --font-size: 15px;
+  --ui-font-size: 14px;
+  --line-height: 1.6;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("JetBrains Mono");
+  --code-inline-font-size: 0.8333333333em;
+}
+
+//==============================================================================
+// ~~~ Serif Fonts ~~~
+//==============================================================================
+// @serif-font: "Noto Serif";
+@serif-font: "PT Serif";
+
+#import-family(@family) when (@family="Noto Serif") {
+  #import-url("https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap");
+}
+#import-family(@family) when (@family="PT Serif") {
+  #import-url("https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+}
+#import-fonts(@family) when (@family=serif) {
+  #import-family(@serif-font);
+  #import-family("Courier Prime");
+}
+
+#set-serif-family(@font) when (@font="Noto Serif") {
+  --font-family: "Noto Serif", Cambria, "Times New Roman", serif;
+  --font-size: 14px;
+  --ui-font-size: 13.5px;
+  --line-height: 1.75;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+
+  #code-font("Courier Prime");
+  --code-inline-font-size: 0.95em;
+  --code-inline-align: 0.04em;
+}
+#set-serif-family(@font) when (@font="PT Serif") {
+  --font-family: "PT Serif", Cambria, "Times New Roman", serif;
+  --font-size: 14px;
+  --ui-font-size: 14px;
+  --line-height: 1.75;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+
+  #code-font("Courier Prime");
+  --code-inline-font-size: 0.9285714286em;
+  --code-inline-align: 0.04em;
+}
+
+//==============================================================================
+// ~~~ Mono Fonts ~~~
+//==============================================================================
+// @mono-font: "Cascadia Code"; // ***
+// @mono-font: "Courier Prime";
+// @mono-font: "DejaVu Mono";
+// @mono-font: "Fira Code"; // ****
+// @mono-font: "Hack";
+@mono-font: "JetBrains Mono"; // ****
+// @mono-font: "Monaspace Neon"; // ****
+// @mono-font: "Noto Sans Mono"; // ***
+
+#import-fonts(@family) when (@family=mono) {
+  #import-family(@mono-font);
+}
+
+#set-mono-family(@font) when (@font="Cascadia Code") {
+  --font-family: "Cascadia Code", Consolas, monospace;
+  --font-size: 13px;
+  --ui-font-size: 13px;
+  --line-height: 1.769230769;
+  --font-weight: 400;
+  --font-weight-bold: 700;
+  #code-font("Cascadia Code");
+  --code-inline-font-size: 1em;
+}
+#set-mono-family(@font) when (@font="Courier Prime") {
+  --font-family: "DejaVu Mono", Consolas, monospace;
+  --font-size: 13px;
+  --ui-font-size: 13px;
+  --line-height: 1.769230769;
+  --font-weight: 400;
+  --font-weight-bold: 700;
+  #code-font("Courier Prime");
+  --code-inline-font-size: 1em;
+}
+#set-mono-family(@font) when (@font="DejaVu Mono") {
+  --font-family: "DejaVu Mono", Consolas, monospace;
+  --font-size: 13px;
+  --ui-font-size: 13px;
+  --line-height: 1.769230769;
+  --font-weight: 400;
+  --font-weight-bold: 700;
+  #code-font("DejaVu Mono");
+  --code-inline-font-size: 1em;
+}
+#set-mono-family(@font) when (@font="Fira Code") {
+  --font-family: "Fira Code", Consolas, monospace;
+  --font-size: 13px;
+  --ui-font-size: 13px;
+  --line-height: 1.692307692;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("Fira Code");
+  --code-inline-font-size: 1em;
+}
+#set-mono-family(@font) when (@font="Hack") {
+  --font-family: "Hack", Consolas, monospace;
+  --font-size: 13px;
+  --ui-font-size: 13px;
+  --line-height: 1.75;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("Hack");
+  --code-inline-font-size: 1em;
+}
+#set-mono-family(@font) when (@font="JetBrains Mono")  {
+  --font-family: "JetBrains Mono", Consolas, monospace;
+  --font-size: 13px;
+  --ui-font-size: 13px;
+  --line-height: 1.769230769;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("JetBrains Mono");
+  --code-inline-font-size: 1em;
+}
+#set-mono-family(@font) when (@font="Monaspace Neon") {
+  --font-family: "Monaspace Neon", Consolas, monospace;
+  --font-size: 12px;
+  --ui-font-size: 12px;
+  --line-height: 1.75;
+  --font-weight: 300;
+  --font-weight-bold: 600;
+  #code-font("Monaspace Neon");
+  --code-inline-font-size: 1em;
+}
+#set-mono-family(@font) when (@font="Noto Sans Mono") {
+  --font-family: "Noto Sans Mono", Consolas, monospace;
+  --font-size: 13px;
+  --ui-font-size: 13px;
+  --line-height: 1.692307692;
+  --font-weight: 400;
+  --font-weight-bold: 600;
+  #code-font("Noto Sans Mono");
+  --code-inline-font-size: 1em;
+}
+
+//==============================================================================
+// ~~~ Code Fonts ~~~
+//==============================================================================
+#import-family(@family) when (@family="Cascadia Code") {
+  #import-url("https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap");
+}
+#import-family(@family) when (@family="Courier Prime") {
+  #import-url("https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+}
+#import-family(@family) when (@family="DejaVu Mono") {
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/dejavu-mono@5.2.5/400.min.css");
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/dejavu-mono@5.2.5/400-italic.min.css");
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/dejavu-mono@5.2.5/700.min.css");
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/dejavu-mono@5.2.5/700-italic.min.css");
+}
+#import-family(@family) when (@family="Fira Code") {
+  #import-url("https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css");
+}
+#import-family(@family) when (@family="Hack") {
+  #import-url("https://cdnjs.cloudflare.com/ajax/libs/hack-font/3.3.0/web/hack.min.css");
+}
+#import-family(@family) when (@family="JetBrains Mono") {
+  #import-url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+}
+#import-family(@family) when (@family="Monaspace Neon") {
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/monaspace-neon@5.2.5/300.min.css");
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/monaspace-neon@5.2.5/300-italic.min.css");
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/monaspace-neon@5.2.5/400.min.css");
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/monaspace-neon@5.2.5/400-italic.min.css");
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/monaspace-neon@5.2.5/600.min.css");
+  #import-url("https://cdn.jsdelivr.net/npm/@fontsource/monaspace-neon@5.2.5/600-italic.min.css");
+}
+#import-family(@family) when (@family="Noto Sans Mono") {
+  #import-url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap");
+}
+
+#code-font(@font) when (@font="Cascadia Code") {
+  --code-font-family: "Cascadia Code", Consolas, monospace;
+  --code-font-size: 13px;
+  --code-line-height: 1.692307692;
+  --code-font-weight: 400;
+  --code-font-weight-bold: 400;
+}
+#code-font(@font) when (@font="Courier Prime") {
+  --code-font-family: "Courier Prime", Consolas, monospace;
+  --code-font-size: 13px;
+  --code-line-height: 1.5;
+  --code-font-weight: 400;
+  --code-font-weight-bold: 400;
+}
+#code-font(@font) when (@font="DejaVu Mono") {
+  --code-font-family: "DejaVu Mono", Consolas, monospace;
+  --code-font-size: 13px;
+  --code-line-height: 1.5;
+  --code-font-weight: 400;
+  --code-font-weight-bold: 400;
+}
+#code-font(@font) when (@font="Fira Code") {
+  --code-font-family: "Fira Code", Consolas, monospace;
+  --code-font-size: 13px;
+  --code-line-height: 1.692307692;
+  --code-font-weight: 400;
+  --code-font-weight-bold: 400;
+  // font-variant-ligatures: none;
+}
+#code-font(@font) when (@font="Hack") {
+  --code-font-family: Hack, Consolas, monospace;
+  --code-font-size: 13px;
+  --code-line-height: 1.66;
+  --code-font-weight: 400;
+  --code-font-weight-bold: 400;
+}
+#code-font(@font) when (@font="JetBrains Mono") {
+  --code-font-family: "JetBrains Mono", Consolas, monospace;
+  --code-font-size: 13px;
+  --code-line-height: 1.692307692;
+  --code-font-weight: 400;
+  --code-font-weight-bold: 400;
+}
+#code-font(@font) when (@font="Monaspace Neon") {
+  --code-font-family: "Monaspace Neon", Consolas, monospace;
+  --code-font-size: 12px;
+  --code-line-height: 1.75;
+  --code-font-weight: 300;
+  --code-font-weight-bold: 300;
+}
+#code-font(@font) when (@font="Noto Sans Mono") {
+  --code-font-family: "Noto Sans Mono", Consolas, monospace;
+  --code-font-size: 13px;
+  --code-line-height: 1.692307692;
+  --code-font-weight: 400;
+  --code-font-weight-bold: 400;
+}
+
+//==============================================================================
+// Apply Font Variables
+//==============================================================================
+#apply-body-root-fonts() {
+  :root {
+    // Root font-size defines the 1rem unit!
+    font-size: var(--font-size);
+  }
+  html > body {
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    letter-spacing: var(--letter-spacing, normal);
+    font-weight: var(--font-weight, 400);
+    .calc-heading-sizes();
+  }
+}
+
+#apply-base-fonts() {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  letter-spacing: var(--letter-spacing, normal);
+  font-weight: var(--font-weight, 400);
+}
+
+#apply-code-fonts() {
+  // All monospaced elements
+  code,
+  kbd,
+  tt,
+  pre {
+    font-family: var(--code-font-family);
+    line-height: var(--code-line-height);
+    letter-spacing: var(--code-letter-spacing, normal);
+    font-weight: var(--code-font-weight);
+    font-style: normal;
+  }
+  // Inline code
+  code,
+  kbd,
+  tt {
+    font-size: var(--code-inline-font-size, 1em);
+  }
+  // Code blocks
+  pre,
+  pre > code {
+    font-size: var(--code-font-size);
+  }
+}
+
+// === Calc Heading Font Sizes ===
+.calc-heading-sizes() {
+  ._calc(@i) {
+    .calc-quadratic-fs(@i, 1em, 1.5em, @N: 5, @b: 0.05);
+  }
+  --h1-size: 2em;
+  --h2-size: ._calc(5)[@result];
+  --h3-size: ._calc(4)[@result];
+  --h4-size: ._calc(3)[@result];
+  --h5-size: ._calc(2)[@result];
+  --h6-size: ._calc(1)[@result];
+}
+
+//==============================================================================
+// Theme Colors
+//==============================================================================
+#set-theme-colors() {
+  // === Radiuses ===
+  --radius-small: 4px;
+  --radius-medium: 6px;
+  --radius-large: 6px;
+
+  // === Backgrounds ===
+  --bg-primary: #f3f2ee; // HSV(48,5,243)
+  --bg-secondary: #e6e4dc; // HSV(48,11,230)
+  --bg-panel: var(--bg-secondary);
+
+  // === Borders ===
+  --border-faint: rgba(0, 0, 0, 0.2);
+  --border-muted: #afafac;
+  --border-strong: rgba(0, 0, 0, 0.5);
+
+  --border-block: var(--border-faint);
+  --border-divider: var(--border-muted);
+  --border-button: rgba(0, 0, 0, 0.3);
+  --border-quote: var(--border-strong);
+  --table-border: rgba(0, 0, 0, 0.25);
+  --table-border-strong: var(--border-strong);
+
+  // === Table bg ===
+  --table-header-bg: rgba(0, 0, 0, 0.1);
+  --table-bg: inherit;
+  --table-bg-alt: inherit;
+  --table-highlight-bg: #f8e5aa; // HSV(45,80,248)
+
+  // === Text ===
+  --text-normal: #1e1e1e;
+  --text-muted: #565758; // HSV(210,6,88)
+  --text-faint: rgba(0, 0, 0, 0.45);
+
+  --text-highlight-bg: #f5dd95; // HSV(45,100,245)
+  --selection: #bbcde8; // HSV(216,49,232)
+
+  --link-color: var(--color-blue);
+  --link-hover-color: #1677ff;
+
+  --color-red: #be1708; // HSV(5,244,190)
+  --color-yellow: #c08000; // HSV(38,255,190)
+  --color-green: #008c46; // HSV(150,255,140)
+  --color-blue: #095acc; // HSV(215,244,204)
+  --color-purple: #a417c0; // HSV(290,224,192)
+  --color-magenta: #c00b66; // HSV(330,240,192)
+
+  // === Code inline ===
+  --code-inline-bg: rgba(0, 0, 0, 0.09);
+  --code-inline-fg: #565758; // HSV(210,6,88)
+  --code-inline-fg: #1e1e1e;
+  --code-inline-fg: #404142;
+  --code-inline-fg: #444;
+  --code-inline-fg: #444648;
+
+  // === Code blocks ===
+  --code-bg: var(--bg-secondary);
+  --code-fg: var(--text-normal);
+  --code-gutter-fg: #999;
+
+  --code-red: #a02715; // HSV(8,222,160)
+  --code-yellow: #be7200; // HSV(36,255,190)
+  --code-green: #008c46; // HSV(150,255,140)
+  --code-blue-dark: #0909a0; // HSV(240,241,160)
+  --code-blue: #095acc; // HSV(215,244,204)
+  --code-purple: #a20bc0; // HSV(290,240,192)
+  --code-magenta: #bb124b; // HSV(340,230,187)
+
+  --code-comment: #878a90; // HSV(220,16,144)
+  --code-operator: #777a80; // HSV(220,18,128)
+
+  --code-class: #000;
+  --code-namespace: var(--code-purple);
+  --code-keyword: var(--code-blue-dark);
+  --code-builtin: var(--code-magenta);
+  --code-type: var(--code-purple);
+  --code-function: var(--color-blue);
+  --code-decorator: var(--code-yellow);
+  --code-directive: var(--code-yellow);
+
+  --code-constant: var(--color-magenta);
+  --code-number: var(--code-yellow);
+  --code-string: var(--code-green);
+
+  --code-tag-name: var(--code-purple);
+  --code-attr-name: var(--code-yellow);
+  --code-attr-value: var(--code-red);
+}
+
+//==============================================================================
+// Define Print Style
+//==============================================================================
+#print-style() {
+  // Utility classes for print layout
+  //
+  // .page-break
+  //   Enforces a page break before an element.
+  //   Usage:
+  //     <div class="page-break"></div>
+  //     ### Heading {.page-break}
+  //
+  // .no-break
+  //   Prevents the element from being split across pages.
+  //
+  // .keep-with-next
+  //   Prevents an element from being separated from the following block.
+  @media print {
+    .pagebreak,
+    .page-break {
+      break-before: page;
+      page-break-before: always;
+      margin-top: 0 !important;
+      margin-block-start: 0 !important;
+
+      // Remove top margin from the first heading after the break
+      + :is(h1, h2, h3, h4, h5, h6) {
+        margin-top: 0.5rem !important;
+        margin-block-start: 0 !important;
+      }
+    }
+
+    .nobreak,
+    .no-break {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .keep-with-next {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+  }
+
+  // === Avoid page breaks ===
+  @media print {
+    pre,
+    table,
+    figure,
+    blockquote,
+    .admonition,
+    img {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    // Avoid page breaks after headings
+    :is(h1, h2, h3, h4, h5, h6) {
+      break-inside: avoid;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+    ul,
+    ol {
+      break-inside: avoid-page;
+    }
+  }
+
+  // === Define Print Style ===
+  @media print {
+    // Override theme variables
+    :root {
+      --bg-primary: transparent;
+      --bg-secondary: #f5f5f5;
+      --text-normal: #000;
+
+      --border-block: #a1a1a1;
+      --border-divider: #737373;
+      --border-button: #525252;
+      --border-quote: #737373;
+      --table-border: #737373;
+      --table-border-strong: #000;
+
+      --code-fg: #000;
+      --code-font-size: 12px;
+    }
+
+    body {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .markdown-preview.markdown-preview {
+      padding: 2pt !important;
+
+      #dividers(false);
+    }
+  }
+
+  // This does not work with Puppeteer’s default options.
+  // It requires the `preferCSSPageSize: true` setting to be injected into
+  // the Markdown file.
+  @page {
+    // size: A4;
+    // margin: 15mm;
+  }
+}
+
+//==============================================================================
+// Text Colors
+//==============================================================================
+#apply-text-colors() {
+  background-color: var(--bg-primary);
+  color: var(--text-normal);
+
+  ::selection {
+    background-color: var(--selection);
+  }
+
+  a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--link-hover-color);
+    text-decoration: underline;
+  }
+
+  strong {
+    color: var(--text-normal);
+  }
+
+  em,
+  em > strong {
+    color: var(--color-yellow);
+  }
+
+  // Text highlight bg
+  mark {
+    background-color: var(--text-highlight-bg);
+  }
+
+  // Strikethrough text
+  s {
+    color: var(--text-faint);
+  }
+}
+
+//==============================================================================
+// Syntax Colors
+//==============================================================================
+#apply-syntax-colors() {
+  .reset-style();
+  .set-custom-style();
+
+  // Reset the style introduced by the extension
+  .reset-style() {
+    pre,
+    code {
+      &[class*="language-"] * {
+        background-color: inherit;
+        color: inherit;
+        font-weight: inherit;
+        font-size: inherit;
+      }
+    }
+  }
+
+  .set-custom-style() {
+    pre[class*="language-"],
+    code[class*="language-"] {
+      .token.operator,
+      .token.attr-equals {
+        color: var(--code-operator);
+        background: none;
+      }
+      .token.entity {
+        color: var(--code-operator);
+        background: none;
+      }
+      .token.punctuation {
+        color: var(--code-fg);
+        background: none;
+      }
+      .token.comment,
+      .token.doctype,
+      .token.triple-quoted-string,
+      .token.cdata,
+      .token.prolog {
+        color: var(--code-comment);
+        font-style: italic;
+      }
+      .token.url {
+        color: var(--code-blue);
+        background: none;
+      }
+      .token.content {
+        color: var(--code-fg);
+        background: none;
+      }
+      .token.namespace {
+        color: var(--code-namespace);
+        font-weight: var(--code-font-weight-bold);
+        opacity: 0.7;
+      }
+      .token.class-name {
+        color: var(--code-class);
+        font-weight: var(--code-font-weight-bold);
+        text-decoration: underline;
+      }
+      .token.macro,
+      .token.macro > .token.directive.keyword {
+        color: var(--code-directive);
+      }
+      .token.important,
+      .token.regex {
+        color: var(--code-directive);
+        font-weight: var(--code-font-weight-bold);
+      }
+      .token.parameter,
+      .token.variable {
+        color: var(--code-function);
+        font-style: italic;
+      }
+      .token.keyword {
+        color: var(--code-keyword);
+        font-weight: var(--code-font-weight-bold);
+      }
+      .token.function,
+      .token.function-name {
+        color: var(--code-function);
+        font-weight: var(--code-font-weight-bold);
+      }
+      .token.builtin,
+      .token.boolean {
+        color: var(--code-builtin);
+        font-weight: var(--code-font-weight-bold);
+        text-decoration: none;
+      }
+      .token.decorator {
+        color: var(--code-decorator);
+        font-style: italic;
+      }
+      .token.constant {
+        color: var(--code-constant);
+      }
+      .token.number {
+        color: var(--code-number);
+      }
+      .token.string,
+      .token.char {
+        color: var(--code-string);
+        font-style: normal;
+      }
+      .token.tag,
+      .token.tag > .token.punctuation {
+        color: var(--code-tag-name);
+        font-weight: var(--code-font-weight-bold);
+      }
+      .token.attr-name {
+        color: var(--code-attr-name);
+        font-style: italic;
+      }
+      .token.attr-value,
+      .token.attr-value > .token.punctuation {
+        color: var(--code-attr-value);
+        font-weight: var(--code-font-weight-bold);
+      }
+      // Markdown
+      .token.bold,
+      .token.bold *,
+      .token.title {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+//==============================================================================
+// Style Text
+//==============================================================================
+#style--base-text() {
+  // === Page Content ===
+  padding-inline: max(2rem, 30px) !important;
+  padding-top: max(2rem, 30px) !important;
+
+  // === Headings ===
+  :is(h1, h2, h3, h4, h5, h6) {
+    line-height: 1.25;
+    color: inherit;
+    padding: 0;
+  }
+  :is(h2, h3, h4, h5, h6) {
+    font-weight: var(--font-weight-heading, var(--font-weight-bold, 700));
+  }
+  h1 {
+    font-size: var(--h1-size);
+    font-weight: 400;
+    .mt(2.5rem);
+    .mb(4);
+  }
+  h2 {
+    font-size: var(--h2-size);
+    .mt(2.5rem);
+    .mb(4);
+  }
+  h3 {
+    font-size: var(--h3-size);
+    .mt(2.25rem);
+    .mb(3);
+  }
+  h4 {
+    font-size: var(--h4-size);
+    .mt(1.75rem);
+    .mb(3);
+  }
+  h5 {
+    font-size: var(--h5-size);
+    .mt(1.5rem);
+    .mb(3);
+  }
+  h6 {
+    font-size: var(--h6-size);
+    .mt(1.25rem);
+    .mb(2);
+  }
+
+  // First headings on page
+  :is(h1, h2, h3, h4):first-child {
+    .mt(1.5rem);
+  }
+
+  // Consecutive headings
+  :is(h1, h2, h3, h4, h5, h6) + :is(h1, h2, h3, h4, h5, h6) {
+    .mt(1.25rem);
+  }
+
+  // === Text Decorations ===
+  b,
+  strong {
+    font-weight: var(--font-weight-bold, 700);
+  }
+
+  // === Paragraphs ===
+  p {
+    .my(2);
+  }
+
+  // Consecutive paragraphs
+  p + p {
+    .mt(3);
+  }
+}
+
+//==============================================================================
+// Style Lists
+//==============================================================================
+#style--lists() {
+  // === Unordered/Ordered Lists ===
+  ul,
+  ol {
+    .m(0);
+    .mt(2);
+    .mb(4);
+  }
+
+  // Nested lists
+  :is(ul, ol) :is(ul, ol) {
+    .mt(0);
+    .mb(0);
+  }
+
+  // List items
+  li {
+    .my(1);
+    p {
+      .my(1);
+    }
+    &::marker {
+      list-style-position: outside;
+      font-weight: var(--font-weight-bold);
+    }
+  }
+
+  ul {
+    .pl(8);
+    > li {
+      list-style-type: disc;
+      &::marker {
+        color: inherit;
+      }
+    }
+  }
+
+  ol {
+    .pl(8);
+    > li {
+      list-style-type: decimal;
+      .pl(0);
+      &::marker {
+        color: var(--text-faint);
+      }
+    }
+  }
+
+  // === Tasklist ===
+  li.task-list-item {
+    list-style: none;
+    list-style-type: none;
+    display: flex;
+    margin-left: -1.45rem;
+    gap: 0.55rem;
+    align-items: center;
+
+    input.task-list-item-checkbox {
+      flex: 0 0 auto;
+      margin: 0;
+      padding: 0;
+    }
+    input[type="checkbox" i] {
+    }
+    input::before {
+      display: none;
+    }
+  }
+
+  // === No-mark list ===
+  .nomark-list {
+    ul {
+      .pl(2);
+      > li {
+        list-style-type: none;
+      }
+    }
+    ul ul {
+      .pl(4);
+    }
+  }
+}
+
+//==============================================================================
+// Style Images
+//==============================================================================
+#style--images() {
+  img {
+    display: block;
+    margin-block: 1rem 1rem;
+    margin-inline: auto;
+    border-radius: var(--radius-medium);
+  }
+
+  #image-zoom-effect();
+}
+
+#image-zoom-effect() {
+  @pad: 0;
+
+  img {
+    cursor: zoom-in;
+    position: relative;
+  }
+
+  img:active {
+    cursor: zoom-out;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+
+    max-width: calc(100% - 2 * @pad);
+    max-height: calc(100% - 2 * @pad);
+    height: auto;
+    width: auto;
+    object-fit: contain;
+
+    border-radius: 0;
+    padding: @pad;
+    margin: auto !important;
+
+    // Image background
+    background-color: #ddd;
+    .bg-checked-pattern();
+
+    // Shadow as viewport backdrop
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8);
+  }
+}
+
+.bg-checked-pattern() {
+  background: repeating-conic-gradient(#f0f0f0 0% 25%, #ddd 0% 50%) 0 / 20px 20px;
+}
+
+//==============================================================================
+// Style Math (Katex)
+//==============================================================================
+#style--math() {
+  .katex {
+    // font-size: 1.15rem;
+    font-size: 16px;
+  }
+  .katex-display {
+    display: block;
+    margin: 1rem 0;
+    text-align: center;
+  }
+}
+
+//==============================================================================
+// Style Code Blocks
+//==============================================================================
+#style--code-blocks() {
+  kbd,
+  code,
+  tt {
+    display: inline;
+    white-space: nowrap;
+    vertical-align: var(--code-inline-align, baseline);
+  }
+
+  // === Keyboard Shortcuts <kbd> ===
+  kbd {
+    background-color: var(--code-inline-bg);
+    color: var(--text-normal);
+    color: var(--code-inline-fg);
+    font-style: normal;
+    white-space: nowrap;
+
+    border: 1px solid var(--border-button);
+    border-bottom-width: 2px;
+    border-radius: var(--radius-small);
+    box-shadow: none;
+    padding-inline: 4px;
+    padding-block: 2px 1px;
+    margin-inline: 1px;
+  }
+
+  // === Inline Code <code> ===
+  code {
+    background-color: var(--code-inline-bg);
+    color: var(--code-inline-fg);
+    white-space: nowrap;
+
+    border-radius: var(--radius-small);
+    padding-inline: 5px;
+    padding-block: 3px 1px;
+  }
+  code::after,
+  code::before {
+    display: none;
+  }
+
+  // === Code Blocks <pre><code> ===
+  @gutter-width: 5ch;
+  @code-padding: 0.75rem 1.25rem;
+
+  pre {
+    background-color: var(--code-bg) !important;
+    text-shadow: none;
+    scrollbar-color: auto;
+
+    border-radius: var(--radius-large);
+    border: 1px solid var(--border-block);
+
+    padding: @code-padding;
+    margin-block: 0.75rem 1rem;
+    margin-inline: 0;
+    white-space: pre;
+
+    code {
+      background-color: inherit;
+      color: var(--code-fg);
+      padding: 0;
+      vertical-align: baseline;
+      white-space: inherit;
+    }
+  }
+
+  // === Line Numbers ===
+  pre.line-numbers {
+    padding-left: @gutter-width + 1.5ch;
+
+    .line-numbers-rows {
+      position: absolute;
+      top: extract(@code-padding, 1);
+      left: 0;
+      width: @gutter-width;
+      border-right: 1px solid var(--code-gutter-fg);
+      font-size: 1em;
+      letter-spacing: -1px;
+
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .line-numbers-rows > span:before {
+      content: counter(linenumber);
+      color: var(--code-gutter-fg);
+      display: block;
+      text-align: right;
+      padding-right: 1ch;
+    }
+  }
+}
+
+//==============================================================================
+// Style Blockquotes
+//==============================================================================
+#style--blockquotes() {
+  blockquote {
+    background-color: var(--code-bg);
+    color: var(--text-muted);
+    font-style: italic;
+
+    border: 1px solid var(--border-block);
+    border-left: 5px solid var(--border-quote);
+    border-radius: var(--radius-medium);
+
+    padding: 0.5rem 1.25rem;
+    margin-block: 1rem 1.5rem;
+    margin-inline: 0;
+  }
+}
+
+//==============================================================================
+// Style Callouts
+//==============================================================================
+#style--callouts() {
+  ._set-callout(@color, @icon: "edit", @text-darken: 20,
+    @bg-alpha: 0.09, @border-alpha: 0.45, @edge-alpha: 0.55, @icon-alpha: 0.6) {
+    // Text color
+    &,
+    :is(strong, b) {
+      .css-color-darken(color, @color, @text-darken);
+    }
+    // Bg and border colors
+    .css-color-alpha(background-color, @color, @bg-alpha);
+    .css-color-alpha(border-color, @color, @border-alpha);
+    .css-color-alpha(border-left-color, @color, @edge-alpha);
+
+    > .admonition-title {
+      .css-color-alpha(background-color, @color, @bg-alpha * 1.45);
+    }
+    > .admonition-title::before {
+      content: @icon;
+      .css-color-alpha(color, @color, @icon-alpha);
+    }
+  }
+
+  .admonition {
+    position: static;
+    overflow: visible;
+
+    border-style: solid;
+    border-width: 1px;
+    border-left-width: 5px;
+    border-radius: var(--radius-medium);
+    box-shadow: none;
+
+    @pad-x: 1.25rem;
+    padding-block: 0;
+    padding-inline: @pad-x;
+    margin-block: 1.25rem 1.5rem;
+    margin-inline: 0;
+
+    // Title
+    > .admonition-title {
+      display: flex;
+      gap: 0;
+      align-items: center;
+      white-space: pre-wrap;
+
+      border: none;
+      padding: 0;
+      padding-block: 0.4rem;
+      padding-inline: @pad-x 1.25rem;
+      margin: 0 -@pad-x;
+
+      font-weight: var(--font-weight-bold, 600);
+      font-size: 1em;
+      line-height: 1.25;
+
+      // Icon
+      &::before {
+        position: static;
+        display: inline-block;
+        vertical-align: middle;
+        flex-shrink: 0;
+
+        padding: 0;
+        margin-left: -1px;
+        margin-right: 1rem;
+
+        font-family: var(--icon-font-family);
+        font-weight: 400;
+        font-size: 1.5em;
+        line-height: 1;
+      }
+    }
+
+    // Reduce margins for content inside callouts
+    > .admonition-title + * {
+      margin-top: 0.75rem;
+    }
+    > .admonition-title + p {
+      margin-top: 0.5rem;
+    }
+    p,
+    p + p,
+    ul,
+    ol {
+      margin-block: 0.5rem;
+    }
+    :is(ul, ol) li {
+      margin-block: 0;
+    }
+
+    // Code blocks inside callouts
+    pre {
+      background-color: rgba(0, 0, 0, 0.075) !important;
+      code {
+        background-color: transparent;
+      }
+    }
+
+    // Margin for the last item inside the callout
+    > :not(.admonition-title, pre, table, img):last-child {
+      margin-bottom: 0.75rem;
+    }
+
+    // Default style
+    ._set-callout(var(--color-blue));
+
+    // Particular callout styles
+    &.note {
+      ._set-callout(var(--color-blue), "edit");
+    }
+    &.abstract,
+    &.summary,
+    &.tldr {
+      ._set-callout(var(--color-blue), "subject");
+    }
+    &.info {
+      ._set-callout(var(--color-blue), "info");
+    }
+    &.todo {
+      ._set-callout(var(--color-purple), "assignment_turned_in");
+    }
+    &.tip,
+    &.hint,
+    &.important {
+      ._set-callout(var(--color-green), "lightbulb");
+    }
+    &.success,
+    &.check,
+    &.done {
+      ._set-callout(var(--color-green), "check_circle");
+    }
+    &.question,
+    &.help,
+    &.faq {
+      ._set-callout(var(--color-yellow), "help", @text-darken: 25, @border-alpha: 0.5, @edge-alpha: 0.6);
+    }
+    &.warning,
+    &.caution,
+    &.attention {
+      ._set-callout(var(--color-yellow), "warning", @text-darken: 25, @border-alpha: 0.5, @edge-alpha: 0.6);
+    }
+    &.failure,
+    &.fail,
+    &.missing {
+      ._set-callout(var(--color-red), "dangerous");
+    }
+    &.danger,
+    &.error {
+      ._set-callout(var(--color-red), "report");
+    }
+    &.bug {
+      ._set-callout(var(--color-red), "bug_report");
+    }
+    &.example {
+      ._set-callout(var(--color-blue), "book");
+    }
+    &.quote {
+      ._set-callout(var(--text-muted), "format_quote");
+    }
+  }
+}
+//==============================================================================
+// Tables
+//==============================================================================
+// === Alternative Table Styles ===
+#extra--table-styles(@parent: ~"") {
+  @{parent}.simple-table {
+    --table-header-bg: transparent;
+    --table-radius: 0;
+    --table-border-x-width: 1px;
+    --table-border-y-width: 1px;
+    --table-divider-width: 2px;
+    --table-outline-width: 0;
+  }
+  @{parent}.nohead-table {
+    thead {
+      display: none;
+    }
+    --table-radius: 0;
+    --table-border-x-width: 1px;
+    --table-border-y-width: 1px;
+    --table-divider-width: 0;
+    --table-outline-width: 0;
+  }
+  @{parent}.xline-table {
+    --table-border-x-width: 1px;
+    --table-border-y-width: 0;
+  }
+  @{parent}.yline-table {
+    --table-border-x-width: 0;
+    --table-border-y-width: 1px;
+  }
+  @{parent}.xyline-table {
+    --table-border-x-width: 1px;
+    --table-border-y-width: 1px;
+  }
+  @{parent}.noline-table {
+    --table-border-x-width: 0;
+    --table-border-y-width: 0;
+  }
+  @{parent}.dense-table {
+    --cell-pad-x: 8px;
+    --cell-pad-y: 2px;
+  }
+}
+
+#style--tables() {
+  --table-radius: var(--radius-medium);
+  --table-border-x-width: 1px;
+  --table-border-y-width: 1px;
+  --table-divider-width: 2px;
+  --table-outline-width: 1px;
+  --table-border-outline: var(--table-border);
+  --table-line-height: 1.5;
+  --cell-pad-x: 10px;
+  --cell-pad-y: 4px;
+
+  // === Reset Table Style ===
+  table {
+    display: table;
+    td,
+    th {
+      border: none;
+      padding: 0;
+      color: inherit;
+    }
+  }
+
+  // === Table Caption ===
+  table caption {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0 0 10px;
+  }
+
+  // === Table Sub-elements ===
+  table {
+    :is(kbd, code, tt) {
+      // line-height: 1.25;
+    }
+  }
+
+  // === Table Style ===
+  table {
+    margin-block: 1rem 1.5rem;
+    margin-inline: 0;
+    width: auto;
+
+    border-collapse: separate;
+    border-spacing: 0px;
+    overflow: hidden;
+    border-radius: var(--table-radius);
+
+    // Header row
+    thead {
+      background-color: var(--table-header-bg);
+    }
+    tr > th {
+      font-weight: var(--font-weight-bold, 600);
+      // font-size: calc(var(--font-size) - 1px);
+      // text-transform: uppercase;
+      text-align: left;
+      line-height: 1.25;
+      padding-inline: var(--cell-pad-x);
+      padding-block: 7px;
+    }
+    tr:first-of-type > th {
+      border-top: var(--table-outline-width) solid var(--table-border-outline);
+    }
+    tr:last-of-type > th {
+      border-bottom: var(--table-divider-width) solid var(--table-border-strong);
+    }
+
+    // Table cells
+    tbody,
+    tbody tr {
+      background-color: var(--table-bg);
+    }
+    th,
+    td {
+      border-bottom: var(--table-border-x-width) solid var(--table-border);
+      border-right: var(--table-border-y-width) solid var(--table-border);
+      padding: var(--cell-pad-y) var(--cell-pad-x);
+      line-height: var(--table-line-height);
+    }
+    th:first-of-type,
+    td:first-of-type {
+      border-left: var(--table-outline-width) solid var(--table-border-outline);
+    }
+    th:last-of-type,
+    td:last-of-type {
+      border-right: var(--table-outline-width) solid var(--table-border-outline);
+    }
+    tr:last-of-type > td {
+      border-bottom: var(--table-outline-width) solid var(--table-border-outline);
+    }
+
+    // Radius on the corner cells
+    tr:first-of-type > th:first-of-type {
+      border-top-left-radius: var(--table-radius);
+    }
+    tr:first-of-type > th:last-of-type {
+      border-top-right-radius: var(--table-radius);
+    }
+    tr:last-of-type > td:first-of-type {
+      border-bottom-left-radius: var(--table-radius);
+    }
+    tr:last-of-type > td:last-of-type {
+      border-bottom-right-radius: var(--table-radius);
+    }
+
+    // Highlight even rows
+    tr:nth-child(even) > td {
+      background-color: var(--table-bg-alt);
+    }
+
+    // Highlight row under cursor
+    tr:hover > td {
+      background-color: var(--table-highlight-bg);
+    }
+  }
+}
+
+//==============================================================================
+// Colorful Headings
+//==============================================================================
+#extra--colorful-headings() when (@colorful-headings=true) {
+  #heading-colors(true);
+}
+
+#heading-colors(@enable) when (@enable=true) {
+  h2 {
+    color: var(--color-red);
+  }
+  h3 {
+    color: var(--color-yellow);
+  }
+  h4 {
+    color: var(--color-blue);
+  }
+  h5 {
+    color: var(--color-purple);
+  }
+  h6 {
+    // color: var(--text-normal);
+    color: var(--color-magenta);
+  }
+}
+
+#heading-colors(@enable) when (@enable=false) {
+  :is(h1, h2, h3, h4, h5, h6) {
+    color: inherit;
+  }
+}
+
+//==============================================================================
+// Style Dividers
+//==============================================================================
+#extra--dividers() when (@colorful-headings=true) {
+  #dividers(true);
+}
+#extra--dividers() when (default()) {
+  #dividers(false);
+}
+
+#dividers(@colorful) when (@colorful=true) {
+  // === Headings ===
+  h1 {
+    .add-divider-line(2px, linear, var(--border-divider));
+  }
+  h2 {
+    .add-divider-line(2px, linear, var(--color-red), 100%);
+  }
+
+  // === HR ===
+  hr {
+    background-color: inherit;
+    height: initial;
+    .add-divider-line(2px, radial, var(--border-divider));
+    margin: 2rem 0;
+  }
+}
+#dividers(@colorful) when (@colorful=false) {
+  // === Headings ===
+  h1 {
+    .add-divider-line(1px, solid, var(--border-divider));
+  }
+  h2 {
+    .add-divider-line(1px, solid, var(--border-divider));
+  }
+
+  // === HR ===
+  hr {
+    background-color: inherit;
+    height: initial;
+    .add-divider-line(1px, radial, var(--border-divider));
+    margin: 2rem 0;
+  }
+}
+
+//==============================================================================
+// Show Tooltips on mouse hover
+//==============================================================================
+#extra--tooltips() {
+  #show-link-url();
+  #show-code-block-class();
+  #show-heading-tags();
+}
+
+// === Show Link URLs ===
+#show-link-url() {
+  a {
+    position: relative;
+
+    &:hover::after {
+      content: attr(href);
+      position: absolute;
+      top: 100%;
+      left: -0.5rem;
+      margin-top: 0.4rem;
+      padding: 0.25rem 0.5rem;
+      z-index: 10;
+
+      background-color: var(--text-highlight-bg);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      white-space: nowrap;
+
+      border: 1px solid var(--border-divider);
+      border-radius: var(--radius-small);
+    }
+  }
+}
+
+// === Show Code Block Class ===
+#show-code-block-class() {
+  pre {
+    position: relative;
+    &:hover::before {
+      content: attr(class);
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      padding-inline: 10px 6px;
+      padding-block: 0 4px;
+      border-radius: 4px;
+      .css-color-alpha(background-color, var(--code-bg), 0.85);
+      color: var(--text-faint);
+    }
+  }
+}
+
+// === Show Heading Tags ===
+#show-heading-tags() {
+  :is(h1, h2, h3, h4, h5, h6) {
+    &::before {
+      display: inline-block;
+      content: "<>";
+      white-space: nowrap;
+      overflow: visible;
+
+      @width: 2.5ch;
+      width: @width;
+      margin-left: -@width;
+      vertical-align: baseline;
+
+      font-family: var(--code-font-family);
+      font-weight: var(--code-font-weight);
+      font-style: normal;
+      font-size: 1rem;
+      line-height: 1;
+      color: var(--text-faint);
+      opacity: 0;
+    }
+    &:hover::before {
+      opacity: 1;
+    }
+  }
+  each(range(6), {
+    h@{value}::before {
+      content: "h@{value}";
+    }
+  });
+}
+
+//==============================================================================
+// Heading Numbering
+//==============================================================================
+#extra--heading-numbering() when (@heading-numbering=true) {
+  #heading-numbering(2);
+}
+
+//==============================================================================
+// Heading Numbering
+// Params:
+//   @start: Numbering starting with H1 or H2
+//==============================================================================
+#heading-numbering(@start: 2) {
+  @hd1: @start;
+  @hd2: @start + 1;
+  @hd3: @start + 2;
+  @levels: @hd1, @hd2, @hd3;
+  @space: "\00a0\00a0";
+
+  // Reset ::before elements if already set
+  ._reset-style(@levels) {
+    each(@levels, {
+      h@{value}::before {
+        display: inline;
+        font-family: inherit;
+        font-weight: inherit;
+        font-style: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        color: inherit;
+        opacity: 1;
+        width: auto;
+        margin: 0;
+      }
+    });
+  }
+  ._reset-style(@levels);
+
+  counter-reset: sec1;
+
+  h@{hd1} {
+    counter-reset: sec2;
+  }
+  h@{hd2} {
+    counter-reset: sec3;
+  }
+  h@{hd1}::before {
+    counter-increment: sec1;
+    content: counter(sec1) @space;
+  }
+  h@{hd2}::before {
+    counter-increment: sec2;
+    content: counter(sec1) "." counter(sec2) @space;
+  }
+  h@{hd3}::before {
+    counter-increment: sec3;
+    content: counter(sec1) "." counter(sec2) "." counter(sec3) @space;
+  }
+
+  // Generate classes allowing to exclude a heading from numbering
+  // Example: `h2.nocount`
+  each(@levels, {
+    h@{value}.nocount::before {
+      counter-increment: none;
+      content: "";
+    }
+  });
+}
+
+//==============================================================================
+// HTML Export
+// - Cleared transforms, they made problems when zooming images.
+//==============================================================================
+#html-export() {
+  body[for="html-export"] .markdown-preview {
+    transform: none !important;
+    left: 0 !important;
+  }
+}
+
+//==============================================================================
+// Override UI
+//==============================================================================
+#override-ui() {
+  // "End of Document" label
+  body:not([data-presentation-mode]) {
+    .final-line.end-of-document {
+      display: block !important;
+      color: var(--text-faint) !important;
+    }
+  }
+}
+
+//==============================================================================
+// Match the extension UI to the VS Code theme
+// - Hardcoded values are replaced by CSS variables available in VS Code
+//==============================================================================
+#override-panels() {
+  // === Context Menu ===
+  .contexify {
+    font-family: var(--font-family);
+    font-size: var(--ui-font-size);
+    font-weight: var(--font-weight, 400);
+    letter-spacing: var(--letter-spacing, normal);
+  }
+  .contexify.contexify_theme-dark {
+    --contexify-menu-bgColor: var(--vscode-menu-background);
+    --contexify-separator-color: var(--vscode-menu-separatorBackground);
+    --contexify-item-color: var(--vscode-menu-foreground);
+  }
+}
+
+//==============================================================================
+// Override TOC
+// - Convert style to flex layout instead of list and `display: inline`
+// - Force single line entries with overflow ellipsis
+// - Use Material Icons for markers instead of native browser markers
+//
+// New style schema:
+//  .md-toc-link-wrapper (flex container)
+//  ├── ::before         (flex item, fixed width, icon/marker)
+//  └── a.md-toc-link    (flex item)
+//      └── p / div      (block, overflow hidden, ellipsis)
+//==============================================================================
+#override-toc(@toc-depth: 4, @toc-single-line: false) {
+  /* === Override TOC === */
+  @indent: 20px;
+  @marker-size: 20px;
+  @list-margin: 3px;
+
+  // === Sidebar TOC Style ===
+  .set-toc-style() {
+    background-color: var(--bg-panel) !important;
+    color: var(--text-normal) !important;
+    box-shadow:
+      -1px 0 4px 1px rgba(0, 0, 0, 0.2),
+      -3px 0 14px 0 rgba(0, 0, 0, 0.12);
+
+    font-family: var(--font-family);
+    font-size: var(--ui-font-size);
+    font-weight: var(--font-weight, 400);
+    letter-spacing: var(--letter-spacing, normal);
+    line-height: 1.5;
+
+    ::selection {
+      background-color: var(--selection);
+    }
+
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+      code {
+        background-color: inherit;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: inherit;
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
+    }
+    a:hover {
+      color: var(--link-hover-color);
+      text-decoration: underline;
+    }
+
+    code {
+      background-color: var(--code-inline-bg) !important;
+      color: var(--code-inline-fg) !important;
+      font-size: 0.95em !important;
+      border-radius: var(--radius-small);
+      padding: 1px 3px !important;
+    }
+
+    .md-toc {
+      padding-top: 0.5rem;
+      padding-inline: 4px 0.75rem;
+    }
+  }
+
+  // === Sidebar TOC ===
+  .preview-container.show-sidebar-toc {
+    .md-sidebar-toc.md-sidebar-toc {
+      // === HARD RESET of built-in style ===
+      details {
+        padding-left: 0 !important;
+      }
+      .md-toc-link-wrapper {
+        list-style: none !important;
+        display: flex !important;
+        margin: 0 !important;
+        padding: 0 !important;
+
+        .md-toc-link,
+        .md-toc-link > p,
+        .md-toc-link > div {
+          display: block !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+      }
+      .set-toc-style();
+
+      // Hide entries nested lower than given level
+      .toc-depth(@toc-depth);
+
+      // === INDENTATION ===
+      details details {
+        padding-left: @indent !important;
+      }
+
+      // === LINKS ===
+      .md-toc-link-wrapper {
+        align-items: center;
+        gap: 4px;
+
+        .md-toc-link {
+          min-width: 0;
+        }
+        .md-toc-link > p,
+        .md-toc-link > div {
+          min-width: 0;
+          text-overflow: ellipsis;
+          margin-block: @list-margin !important;
+
+          & when (@toc-single-line=true) {
+            overflow: hidden;
+            white-space: nowrap;
+          }
+        }
+      }
+
+      // === MARKERS ===
+      // All markers
+      .md-toc-link-wrapper::before {
+        font-family: var(--icon-font-family);
+        font-weight: 400;
+        font-size: @marker-size;
+        line-height: 1.5;
+
+        display: inline-block;
+        flex: none;
+        width: @marker-size;
+        text-align: middle;
+        align-self: flex-start;
+
+        opacity: 0.6;
+      }
+      .md-toc-link-wrapper:hover::before {
+        opacity: 1;
+      }
+
+      // Collapsed marker
+      summary.md-toc-link-wrapper::before {
+        content: "chevron_right";
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+      // Expanded marker
+      details[open] > summary.md-toc-link-wrapper::before {
+        transform: rotate(90deg);
+      }
+      // Non-collapsible leaf items
+      .md-toc-link-wrapper:not(summary)::before {
+        .leaf-marker();
+        padding-left: @indent;
+      }
+    }
+  }
+
+  // Hide entries nested lower than given level
+  .toc-depth(@level, @selector: "details") when (@level >= 1) {
+    & when (@level = 1) {
+      @{selector} {
+        summary.md-toc-link-wrapper::before {
+          .leaf-marker();
+          transform: none !important;
+        }
+        div {
+          display: none !important;
+        }
+      }
+    }
+    .toc-depth((@level - 1), ~"@{selector} details");
+  }
+
+  // === Marker style ===
+  .leaf-marker() {
+    content: "arrow_right_alt";
+    cursor: default;
+    font-size: 15px !important;
+    margin-top: @list-margin + 0px;
+    text-align: right;
+    opacity: 0.35;
+  }
+}
+
+//==============================================================================
+// Margin & Padding Mixins
+// Examples:
+//   .mt(4) -> margin-top: 4 * 0.25rem;
+//   .mb(10px) -> margin-bottom: 10px;
+//   .mx(auto) -> margin-inline: auto;
+//==============================================================================
+// Unitless number -> return scale
+._spacing(@v) when (isnumber(@v)) and (isunit(@v, "")) {
+  @result: @v * 0.25rem;
+}
+// Anything else -> pass through
+._spacing(@v) when (default()) {
+  @result: @v;
+}
+
+// === Margins ===
+.m(@v) {
+  margin: ._spacing(@v) [];
+}
+.ml(@v) {
+  margin-left: ._spacing(@v) [];
+}
+.mr(@v) {
+  margin-right: ._spacing(@v) [];
+}
+.mt(@v) {
+  margin-top: ._spacing(@v) [];
+}
+.mb(@v) {
+  margin-bottom: ._spacing(@v) [];
+}
+.mx(@v) {
+  margin-inline: ._spacing(@v) [];
+}
+.my(@v) {
+  margin-block: ._spacing(@v) [];
+}
+
+// === Paddings ===
+.p(@v) {
+  padding: ._spacing(@v) [];
+}
+.pl(@v) {
+  padding-left: ._spacing(@v) [];
+}
+.pr(@v) {
+  padding-right: ._spacing(@v) [];
+}
+.pt(@v) {
+  padding-top: ._spacing(@v) [];
+}
+.pb(@v) {
+  padding-bottom: ._spacing(@v) [];
+}
+.px(@v) {
+  padding-inline: ._spacing(@v) [];
+}
+.py(@v) {
+  padding-block: ._spacing(@v) [];
+}
+
+//==============================================================================
+// Quadratic interpolation for N font sizes
+//
+// f(x) = a*x^2 + b*x + c; b is a parameter
+// f(0) = fs1 = a*0 + b*0 + c
+// f(n-1) = fsN = a*(n-1)^2 + b*(n-1) + c
+// => c = fs1
+// => a = (fsN - fs1 - (n-1)*b) / (n-1)^2
+//==============================================================================
+.calc-quadratic-fs(@i, @fs1, @fsN, @N, @b: 0) {
+  @x: @i - 1;
+  @a: (@fsN - @fs1 - (@N - 1) * @b) / pow(@N - 1, 2);
+  @result: (@a * @x * @x) + (@b * @x) + @fs1;
+}
+
+//==============================================================================
+// CSS Color Utility Mixins
+//
+// Generate modern CSS Color Level 4 expressions using `rgb()` and `hsl()`
+// with the `from <color>` syntax.
+//
+// NOTES:
+// - These do NOT use LESS color functions.
+// - All calculations are evaluated at runtime by the browser.
+// - Designed to work with CSS variables (`var(--color-*)`).
+//==============================================================================
+.color-alpha(@color, @alpha) {
+  @result: ~"rgb(from @{color} r g b / @{alpha})";
+}
+.css-color-alpha(@prop, @color, @alpha) when (isnumber(@alpha)) {
+  @{prop}: ~"rgb(from @{color} r g b / @{alpha})";
+}
+.css-color-alpha(@prop, @color, @alpha) when (default()) {
+  @{prop}: @color;
+}
+.css-color-darken(@prop, @color, @amount) {
+  @{prop}: ~"hsl(from @{color} h s calc(l - @{amount}))";
+}
+.css-color-lighten(@prop, @color, @amount) {
+  @{prop}: ~"hsl(from @{color} h s calc(l + @{amount}))";
+}
+
+//==============================================================================
+// Add a visual divider line
+//
+// Params:
+//   @width:  Divider thickness
+//   @style:  solid | linear | radial
+//   @color:  Divider color
+//   @fade:   Gradient softness (for gradients) | alpha (for solid lines)
+//   @offset: Space between text and divider line
+//
+// Examples:
+//   .add-divider-line(1px, solid, var(--color-red), 0.4);
+//   .add-divider-line(2px, linear, var(--color-red));
+//==============================================================================
+.add-divider-line(@width, @style, @color, @fade: none, @offset: 0.35rem) {
+  // Solid divider uses border-bottom
+  & when (@style = solid) {
+    &::after {
+      display: none;
+    }
+    padding: 0;
+    padding-bottom: @offset;
+    border: none;
+    border-bottom-width: @width;
+    border-bottom-style: solid;
+    border-bottom-color: if(isnumber(@fade), .color-alpha(@color, @fade)[@result], @color);
+  }
+
+  // Gradient divider (linear or radial) uses a pseudo-element
+  & when (@style = linear), (@style = radial) {
+    border: none;
+    padding: 0;
+
+    &::after {
+      content: "";
+      display: block;
+      margin-top: @offset;
+      height: @width;
+      .add-gradient(@style, @color, @fade);
+    }
+  }
+}
+.add-gradient(@style, @color, @fade) when (@style = linear) {
+  @colorStop: if(isnumber(@fade), 100% + @fade, 100%);
+  background-image: linear-gradient(to right, transparent 5%, @color @colorStop);
+}
+.add-gradient(@style, @color, @fade) when (@style = radial) {
+  @colorStop: if(isnumber(@fade), -@fade, 0);
+  background-image: radial-gradient(circle, @color @colorStop, transparent);
+}

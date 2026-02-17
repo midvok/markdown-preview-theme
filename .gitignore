@@ -1,0 +1,49 @@
+######################
+# OS Generated Files #
+######################
+.directory
+.DS_Store
+ehthumbs.db
+Thumbs.db
+
+#####################
+# IDE Project Files #
+#####################
+# JetBrains IDE
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+.history/
+*.code-workspace
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+###################
+# Build Artifacts #
+###################
+node_modules/
+dist/
+out/
+*.map
+
+##################
+# Custom Ignores #
+##################
+src/**/*.css
+*.html
+*.pdf
