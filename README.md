@@ -10,8 +10,9 @@ A highly customizable theme designed for the VS Code Extension [Markdown Preview
 - **Heading numbering**: Toggle heading numbering starting from H1 or H2.
 - **Front-matter configuration**: Apply custom CSS classes via Markdown YAML front matter to style the entire document.
 - **Utility CSS classes**: Additional classes for fine-grained layout control directly within your Markdown.
+- **Customized TOC**: Control the visible depth of the Table of Contents tree in the sidebar.
 
-<img width="800" height="1151" alt="demo" src="https://github.com/user-attachments/assets/fb8176fa-e56e-467a-a93f-ec689f3c8d83" />
+![alt text](https://i.imgur.com/jnaiwSA.png)
 
 ## Theme Installation
 
@@ -22,13 +23,47 @@ There are two ways to apply the theme stylesheet:
 - **Option 1**:
   - In VS Code, run the command **Markdown Preview Enhanced: Customize CSS**.
   - This opens the `style.less`.
-  - Replace its contents with the theme file located at `src/style.less`.
+  - Replace its contents with the theme file located at `theme/style.less`.
 - **Option 2**:
   - Locate the `style.less` file in your home directory.
   - The default path on Windows is: `%USERPROFILE%\.crossnote\style.less`.
-  - Replace it with the theme file `src/style.less`.
+  - Replace it with the theme file `theme/style.less`.
 
 ## Theme Customization
+
+### Global Theme Variables
+
+The beginning of the stylesheet contains several global variables that allow you to alter the theme's default behavior:
+
+```less
+// Select base text font family
+// {sans, serif, mono}
+@base-font: serif;
+
+// Import web fonts if they are not installed on your system
+// {true, false}
+@import-fonts: true;
+
+// Toggle colorful headings
+// {true, false}
+@colorful-headings: true;
+
+// Automatic heading numbering
+// {true, false}
+@heading-numbering: false;
+
+// Limit the depth of the sidebar TOC tree
+// {1..6}
+@toc-depth: 3;
+
+// Enable ellipsis overflow for long TOC items
+// {true, false}
+@toc-ellipsis: false;
+
+// Zoom images on image click (alternative to "Enable Image Lightbox" in MPE settings)
+// {true, false}
+@click-to-zoom: false;
+```
 
 ### Global Styles via Front Matter
 
@@ -39,7 +74,7 @@ This theme supports the following classes:
 | Class                      | Description                                     |
 | -------------------------- | ----------------------------------------------- |
 | `sans`, `serif`, `mono`    | Override the document font family               |
-| `fs12px` .. `fs16px`       | Override the document font size                 |
+| `fs12px` .. `fs18px`       | Override the document font size                 |
 | `[no]centerimg`            | Toggle image centering                          |
 | `[no]centertable`          | Toggle table centering                          |
 | `[no]colorhead`            | Toggle colorful headings                        |
@@ -47,7 +82,7 @@ This theme supports the following classes:
 | `headnum[-h2]`             | Add heading numbering (starting from H2)        |
 | `wrapcode`                 | Wrap long lines in code blocks                  |
 | `simple-table`             | Apply simplified table styling                  |
-| `[x][y][xy][no]line-table` | Control which internal borders appear in tables |
+| `[x\|y\|xy\|no]line-table` | Control which internal borders appear in tables |
 | `nohead-table`             | Hide the table header row                       |
 | `dense-table `             | Reduce table cell padding                       |
 
@@ -83,30 +118,20 @@ The **MPE** extension supports this syntax for headings only. This is particular
 
 For more complex layouts, you can wrap your Markdown in HTML tags like `<div>` or `<section>`. See additional examples in [this demo file](demo/markdown-custom-classes.md).
 
-| Class            | Description                                                  |
-| ---------------- | ------------------------------------------------------------ |
-| `cols-[n]`       | Create a **multi-column** layout with `n` columns (up to 10) |
-| `cols-rule`      | Add vertical divider lines between columns                   |
-| `nomark-list`    | Remove list item markers                                     |
-| `grid-cols-[n]`  | Create a **CSS grid** layout with `n` columns                |
-| `grid-cols-auto` | Create a **CSS grid** layout with `auto-fit` columns         |
-| `flex`           | Apply a **Flexbox** container to child elements              |
-
-**Example**: Multicolumn list
-
-```markdown
-<section class="cols-3 cols-rule">
-
-- First list item **bold**
-- Second list item _italic_
-- Third list item `monospace`
-</section>
-```
+| Class                 | Description                                                  |
+| --------------------- | ------------------------------------------------------------ |
+| `cols-[n]`            | Create a **multi-column** layout with `n` columns (up to 10) |
+| `cols-rule`           | Add vertical divider lines between columns                   |
+| `nomark-list`         | Remove list item markers                                     |
+| `grid-cols-[n]`       | Create a **CSS grid** layout with `n` columns                |
+| `grid-cols-auto`      | Create a **CSS grid** layout with `auto-fit` columns         |
+| `flex`                | Apply a **Flexbox** container to child elements              |
+| `float-[left\|right]` | Allow to wrap text around images set to float left or right  |
 
 **Example**: Flexbox layout to display tables side by side
 
 ```markdown
-<section class="flex simple-table xline-table">
+:::{.flex .simple-table .dense-table .xline-table}
 
 | Markdown syntax    |                 |
 | ------------------ | --------------- |
@@ -124,8 +149,10 @@ For more complex layouts, you can wrap your Markdown in HTML tags like `<div>` o
 | `\int`       | Integral symbol    |
 | `\frac{}{}`  | Fraction           |
 
-</section>
+:::
 ```
+
+![alt text](https://i.imgur.com/fZiM8d1.png)
 
 ## Extension Tweaks
 

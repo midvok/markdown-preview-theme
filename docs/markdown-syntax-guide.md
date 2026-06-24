@@ -101,33 +101,33 @@ Use two equal signs to ==highlight text==.
 
 The following samples test the CSS color variables defined in the custom theme:
 
-- <span style="color: var(--text-normal)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-normal)</tt>;</span>
-- <span style="color: var(--text-muted)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-muted)</tt>;</span>
-- <span style="color: var(--text-faint)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-faint)</tt>;</span>
-- <span style="color: var(--color-red)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-red)</tt>;</span>
-- <span style="color: var(--color-yellow)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-yellow)</tt>;</span>
-- <span style="color: var(--color-green)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-green)</tt>;</span>
-- <span style="color: var(--color-blue)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-blue)</tt>;</span>
-- <span style="color: var(--color-purple)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-purple)</tt>;</span>
-- <span style="color: var(--color-magenta)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-magenta)</tt>;</span>
+- <span style="color: var(--text-normal)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-normal)</tt></span>
+- <span style="color: var(--text-muted)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-muted)</tt></span>
+- <span style="color: var(--text-faint)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-faint)</tt></span>
+- <span style="color: var(--color-red)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-red)</tt></span>
+- <span style="color: var(--color-yellow)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-yellow)</tt></span>
+- <span style="color: var(--color-green)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-green)</tt></span>
+- <span style="color: var(--color-blue)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-blue)</tt></span>
+- <span style="color: var(--color-purple)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-purple)</tt></span>
+- <span style="color: var(--color-magenta)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-magenta)</tt></span>
 
 On Blockquote Background:
 
-> - <span style="color: var(--text-normal)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-normal)</tt>;</span>
-> - <span style="color: var(--text-muted)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-muted)</tt>;</span>
-> - <span style="color: var(--text-faint)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-faint)</tt>;</span>
-> - <span style="color: var(--color-red)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-red)</tt>;</span>\
->   <span style="color: var(--code-red)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-red)</tt>;</span>
-> - <span style="color: var(--color-yellow)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-yellow)</tt>;</span>\
->   <span style="color: var(--code-yellow)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-yellow)</tt>;</span>
-> - <span style="color: var(--color-green)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-green)</tt>;</span>\
->   <span style="color: var(--code-green)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-green)</tt>;</span>
-> - <span style="color: var(--color-blue)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-blue)</tt>;</span>\
->   <span style="color: var(--code-blue)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-blue)</tt>;</span>
-> - <span style="color: var(--color-purple)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-purple)</tt>;</span>\
->   <span style="color: var(--code-purple)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-purple)</tt>;</span>
-> - <span style="color: var(--color-magenta)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-magenta)</tt>;</span>\
->   <span style="color: var(--code-magenta)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-magenta)</tt>;</span>
+> - <span style="color: var(--text-normal)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-normal)</tt></span>
+> - <span style="color: var(--text-muted)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-muted)</tt></span>
+> - <span style="color: var(--text-faint)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--text-faint)</tt></span>
+> - <span style="color: var(--color-red)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-red)</tt></span>\
+>   <span style="color: var(--code-red)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-red)</tt></span>
+> - <span style="color: var(--color-yellow)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-yellow)</tt></span>\
+>   <span style="color: var(--code-yellow)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-yellow)</tt></span>
+> - <span style="color: var(--color-green)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-green)</tt></span>\
+>   <span style="color: var(--code-green)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-green)</tt></span>
+> - <span style="color: var(--color-blue)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-blue)</tt></span>\
+>   <span style="color: var(--code-blue)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-blue)</tt></span>
+> - <span style="color: var(--color-purple)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-purple)</tt></span>\
+>   <span style="color: var(--code-purple)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-purple)</tt></span>
+> - <span style="color: var(--color-magenta)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--color-magenta)</tt></span>\
+>   <span style="color: var(--code-magenta)">This is normal 0123456789 and <b>bold text sample</b> ⬤ <tt>color: var(--code-magenta)</tt></span>
 
 ### Code Spans and Blocks
 
@@ -147,7 +147,6 @@ To format text as inline code, wrap it in a single backtick <kbd>\`</kbd>. Markd
 
 Code blocks are used for multi-line code snippets or longer examples. Markdown processors render them using the `<pre>` and `<code>` HTML tags together, which preserve whitespace and apply monospaced formatting.
 
-
 > [!note]
 > Obsidian uses **Prism.js** for syntax highlighting, a list of supported languages can be found [here](https://prismjs.com/#supported-languages).
 
@@ -158,6 +157,17 @@ There are several ways to create code blocks:
 - **Syntax highlighting**: Specify a language (like python, bash, json) right after the opening backticks.
 - **Line numbers**: Some processors support adding the `{.line-numbers}` class.
 - **Escaping backticks in blocks**: If your code contains triple backticks, use four backticks <kbd>\`\`\`\`</kbd>.
+
+#### Import File as Code Block
+
+**Markdown Preview Enhanced**:
+
+- To embed an external script as a code block, use the `@import` macro. The native engine requires the `as` attribute to properly apply the language grammar.
+  ```markdown
+  @import "script.py" {code_block=true as="python" class="line-numbers"}
+  ```
+
+#### Examples
 
 ##### Python Code
 
@@ -263,15 +273,15 @@ int main() {
 
 ##### Unordered Lists
 
-To create an unordered list, add dashes <kbd>-</kbd>, asterisks <kbd>\*</kbd>, or plus signs <kbd>+</kbd> in front of line items. Indent one or more items to create a nested list.
+To create an unordered list, <kbd>ABCD</kbd> add dashes <kbd>-</kbd>, asterisks <kbd>\*</kbd>, or plus signs <kbd>+</kbd> in front of line items. Indent one or more items to create a nested list.
 
 If a list item contains multiple paragraphs, each subsequent paragraph should be indented at least to the same level as the start of the list item text.
 
 - First item
 - Second item
 - Third item
-  - First indented item
-  - Second indented item
+  - First _indented_ item
+  - Second _indented_ item
 - Fourth item
 
 ##### Ordered Lists
@@ -279,14 +289,14 @@ If a list item contains multiple paragraphs, each subsequent paragraph should be
 1. First item
 2. Second item
 3. Third item
-   1. First indented item
-   2. Second indented item
+   1. First _indented_ item
+   2. Second _indented_ item
 4. Fourth item
 
 ##### Task Lists
 
-- [x] This is a complete item
-- [ ] This is an incomplete item
+- [x] This is a _complete_ item
+- [ ] This is an _incomplete_ item
 - First item
 - Second item
 
@@ -307,6 +317,28 @@ If a list item contains multiple paragraphs, subsequent paragraphs must be inden
    I need to add another paragraph below the second list item.
 
 3. And here's the third list item.
+
+##### Description (Definition) Lists
+
+A description list is a list of terms with corresponding descriptions. Each term can have multiple descriptions. In HTML this is represented with `<dl>` (description list), `<dt>` (description term), and `<dd>` (description details) tags.
+
+While standard Markdown does not include a dedicated syntax for definition lists, they are supported by Markdown Preview Enhanced (MPE), MkDocs, and GitLab. Note that GitHub does not currently support this syntax.
+
+```markdown
+Term 1
+: Definition of term 1
+
+Term 2
+: Definition of term 2
+: Another definition for term 2
+```
+
+Term 1
+: Definition of term 1
+
+Term 2
+: Definition of term 2
+: Another definition for term 2
 
 ### Line Breaks
 
@@ -373,7 +405,6 @@ Some Markdown procesors support **resizing images** using a syntax that appends 
 ### Tables {.page-break}
 
 To create tables use vertical bars <kbd>|</kbd> and hyphens <kbd>-</kbd>. Vertical bars separate columns, and hyphens define the column header. Outer vertical bars are optional.
-
 
 ```markdown
 | First name | Last name |
@@ -566,7 +597,6 @@ If you also want to support the **GitHub callout syntax**, you need to extend th
 - Run the command **Markdown Preview Enhanced: Extend Parser (Global)**.
 - This opens the `parser.js` file.
 - Override the `onWillParseMarkdown` hook with the follwing [code snippet](https://github.com/shd101wyy/vscode-markdown-preview-enhanced/issues/1911).
-
 
 !!! note
 

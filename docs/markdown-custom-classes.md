@@ -19,7 +19,11 @@ puppeteer:
 
 ## Introduction
 
-Some Markdown processors support **Pandoc-style attribute syntax**, which allows adding classes, IDs, and custom attributes using curly braces.
+### Pandoc-Style Syntax
+
+Some Markdown processors support **Pandoc-style** **attribute syntax** and **fenced divs**, which allow adding classes, IDs, and custom attributes to your Markdown content.
+
+##### Attribute Syntax
 
 ```css
 {.class #id style="color: red;"}
@@ -30,8 +34,39 @@ Some Markdown processors support **Pandoc-style attribute syntax**, which allows
 ```markdown
 ## Enforce a page break before this heading {.page-break}
 
-###### This heading will be red {style="color: red"}
+### This heading will be red {style="color: red"}
 ```
+
+Which renders in HTML as:
+
+```html
+<h3 style="color: red">This heading will be red</h3>
+<h2 class="page-break">Enforce a page break before this heading</h2>
+```
+
+##### Fenced Divs
+
+Allow special fenced syntax for native Div blocks. A Div starts with a fence containing at least three consecutive colons plus some attributes. The attributes may optionally be followed by another string of consecutive colons.
+
+**Example**:
+
+```markdown
+:::.class1
+:::
+
+:::{.class1 .class2}
+:::
+```
+
+Which renders in HTML as:
+
+```html
+<div class="class1"></div>
+
+<div class="class1 class2"></div>
+```
+
+### Mixing Markdown and HTML
 
 Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown content inside HTML tags like `<div>` or `<section>` to apply specific styles or utility classes.
 
@@ -50,7 +85,8 @@ Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown
 
 > [!success] Markdown Preview Enhanced (MPE)
 >
-> - **Attribute syntax**: MPE supports the curly brace `{}` syntax for headings only.
+> - **Attribute syntax**: The curly brace `{}` syntax is supported for headings, code blocks and images.
+> - **Fenced divs**: Supported.
 > - **HTML mixing**: Wrapping Markdown in `<div>` or `<section>` tags seems to be supported.\
 >   Note that you must include a blank line after the opening tag.
 
@@ -72,18 +108,33 @@ Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown
 
 ### Layout Helpers
 
-| Class            | Description                                                  |
-| ---------------- | ------------------------------------------------------------ |
-| `cols-[n]`       | Create a **multi-column** layout with `n` columns (up to 10) |
-| `cols-rule`      | Add vertical divider lines between columns                   |
-| `nomark-list`    | Remove list item markers                                     |
-| `grid-cols-[n]`  | Create a **CSS grid** layout with `n` columns                |
-| `grid-cols-auto` | Create a **CSS grid** layout with `auto-fit` columns         |
-| `flex`           | Apply a **Flexbox** container to child elements              |
+| Class                 | Description                                                  |
+| --------------------- | ------------------------------------------------------------ |
+| `cols-[n]`            | Create a **multi-column** layout with `n` columns (up to 10) |
+| `cols-rule`           | Add vertical divider lines between columns                   |
+| `nomark-list`         | Remove list item markers                                     |
+| `grid-cols-[n]`       | Create a **CSS grid** layout with `n` columns                |
+| `grid-cols-auto`      | Create a **CSS grid** layout with `auto-fit` columns         |
+| `flex`                | Apply a **Flexbox** container to child elements              |
+| `float-[left\|right]` | Allow to wrap text around images set to float left or right  |
 
 ## Testing Utility Class
 
-### Multi-Column Layout with `cols-*`
+### Multi-Column Layout
+
+**Classes**:
+
+- `cols-[n]`
+- `cols-rule`
+
+**Fenced div syntax**:
+
+```markdown
+:::{.cols-3 .cols-rule .nomark-list}
+:::
+```
+
+**HTML syntax**:
 
 ```markdown
 <section class="cols-3 cols-rule nomark-list">
@@ -91,9 +142,9 @@ Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown
 </section>
 ```
 
-##### Nano Editor Shortcuts
+##### List in Multi-Column Layout (Nano Editor Shortcuts)
 
-<section class="cols-3 cols-rule nomark-list">
+:::{.cols-3 .cols-rule .nomark-list}
 
 - <kbd>Ctrl+O</kbd> — Save output to file
 - <kbd>Ctrl+X</kbd> — Exit
@@ -110,33 +161,39 @@ Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown
 - <kbd>Alt+P</kbd> — Toggle visible whitespace
 - <kbd>Alt+S</kbd> — Toggle softwrapping
 
-</section>
+:::
 
 ##### Images in Multi-Column Layout
 
-<section class="cols-5 cols-rule">
+:::{.cols-5 .cols-rule}
 
 ![alt text](https://octodex.github.com/images/original.png "octocat original")
-
 ![alt text](https://octodex.github.com/images/class-act.png "octocat class act")
-
 ![alt text](https://octodex.github.com/images/femalecodertocat.png "femalecodertocat")
-
 ![alt text](https://octodex.github.com/images/shoptocat.png "shoptocat")
-
 ![alt text](https://octodex.github.com/images/pusheencat.png "pusheencat")
-
 ![alt text](https://octodex.github.com/images/homercat.png "homercat")
-
 ![alt text](https://octodex.github.com/images/octonaut.jpg "octonaut")
-
 ![alt text](https://octodex.github.com/images/daftpunktocat-guy.gif "daftpunktocat-guy")
 
-</section>
+:::
 
 ---
 
-### Grid Layout with `grid-cols-*`
+### Grid Layout
+
+**Classes**:
+
+- `grid-cols-[n]`
+
+**Fenced div syntax**:
+
+```markdown
+:::grid-cols-5
+:::
+```
+
+**HTML syntax**:
 
 ```markdown
 <section class="grid-cols-5">
@@ -146,7 +203,7 @@ Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown
 
 ##### Images in Grid Layout
 
-<section class="grid-cols-5">
+:::grid-cols-5
 
 ![alt text](https://octodex.github.com/images/original.png "octocat original")
 
@@ -164,11 +221,24 @@ Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown
 
 ![alt text](https://octodex.github.com/images/daftpunktocat-guy.gif "daftpunktocat-guy")
 
-</section>
+:::
 
 ---
 
-### Flexbox Layout with `flex`
+### Flexbox Layout
+
+**Classes**:
+
+- `flex`
+
+**Fenced div syntax**:
+
+```markdown
+:::{.flex .simple-table .dense-table .xline-table}
+:::
+```
+
+**HTML syntax**:
 
 ```markdown
 <section class="flex simple-table dense-table xline-table">
@@ -176,7 +246,9 @@ Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown
 </section>
 ```
 
-<section class="flex simple-table dense-table xline-table">
+##### Tables in Flexbox Layout
+
+:::{.flex .simple-table .dense-table .xline-table}
 
 | Identity & Session |                    |
 | ------------------ | ------------------ |
@@ -211,4 +283,34 @@ Another option is to **mix Markdown and HTML**. This allows you to wrap Markdown
 | `XDG_CURRENT_DESKTOP` | `X-Cinnamon`      |
 | `XDG_SESSION_DESKTOP` | `cinnamon`        |
 
-</section>
+:::
+
+---
+
+### Float Left/Right
+
+**Attribute syntax**:
+
+```markdown
+![alt text](img_url){.float-left}
+![alt text](img_url){.float-right}
+```
+
+##### Example with List
+
+![alt text](https://placehold.co/160x120/333/fff?text=float-left){.float-left}
+
+- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+- Aliquam vel ligula at nisi cursus aliquet.
+- Integer euismod felis eget lacinia auctor.
+- Duis ornare nisl eget mauris ultrices molestie.
+
+##### Example with Paragraphs
+
+![alt text](https://placehold.co/160x120/333/fff?text=float-left){.float-left}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie augue sed massa aliquet condimentum. Praesent tempus suscipit pulvinar. Pellentesque nisi augue, maximus non ante ac, maximus feugiat risus. Praesent cursus est dolor, nec lobortis lectus molestie in. Vivamus ac luctus felis. Nam euismod dolor eget erat bibendum, vel placerat risus porttitor. Aenean eu luctus est.
+
+![alt text](https://placehold.co/160x120/333/fff?text=float-right){.float-right}
+
+Pellentesque convallis felis urna, a ultricies nisi consectetur nec. Nulla porta leo velit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris lobortis vitae nisi ac venenatis. Vestibulum molestie condimentum dictum. Morbi justo erat, pharetra id orci in, malesuada ornare enim. Donec semper tortor at tempor ornare. Nullam nisl felis, ultricies in pulvinar ac, vulputate non erat.

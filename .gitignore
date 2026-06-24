@@ -44,6 +44,6 @@ out/
 ##################
 # Custom Ignores #
 ##################
-src/**/*.css
+theme/**/*.css
 *.html
 *.pdf
