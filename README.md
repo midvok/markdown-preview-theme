@@ -116,7 +116,7 @@ The **MPE** extension supports this syntax for headings only. This is particular
 
 #### Layout Helpers
 
-For more complex layouts, you can wrap your Markdown in HTML tags like `<div>` or `<section>`. See additional examples in [this demo file](demo/markdown-custom-classes.md).
+For more complex layouts, you can wrap your Markdown in HTML tags like `<div>` or `<section>`. See additional examples in [this demo file](docs/markdown-utility-classes.md).
 
 | Class                 | Description                                                  |
 | --------------------- | ------------------------------------------------------------ |

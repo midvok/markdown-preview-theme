@@ -15,7 +15,7 @@ puppeteer:
   footerTemplate: '<div style="width:100%;font-size:3mm;text-align:center;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>'
 ---
 
-# Markdown — Custom CSS Classes
+# Markdown Custom Utility Classes
 
 ## Introduction
 
