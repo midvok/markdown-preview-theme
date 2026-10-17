@@ -1,26 +1,23 @@
 ({
-  // onWillParseMarkdown: async function (markdown) {
-  //    return markdown;
-  // },
-
-  // Enable GitHub syntax for admonitions
-  // https://github.com/shd101wyy/vscode-markdown-preview-enhanced/issues/1911
   onWillParseMarkdown: async function (markdown) {
-    return new Promise((resolve, reject) => {
-      const calloutRegex = /^> ?\[!(?<type>\w+)\](?<title>.*)?\r?\n(?<content>(?:>.*\r?\n?)*)/gm;
-      const newMarkdown = markdown.replace(calloutRegex, (match, type, title, content) => {
-        const admonitionType = type.toLowerCase();
-        const admonitionTitle = title && title.trim() ? `${title.trim()}` : "";
+    // Print date, e.g. "2026-10-14". Built from parts, since MPE's sandbox has
+    // no locale support (toLocaleDateString() ignores its locale argument).
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-        const admonitionContent = content
-          .replace(/^> ?/gm, "")
-          .split(/\r?\n/)
-          .map((line) => `    ${line}`)
-          .join("\n");
-        return `!!! ${admonitionType} ${admonitionTitle}\n${admonitionContent}\n\n`;
-      });
-      return resolve(newMarkdown);
-    });
+    // Default Puppeteer PDF options
+    const defaults =
+      "puppeteer: {format: A4, scale: 0.85, printBackground: true, " +
+      "margin: {top: 23mm, bottom: 15mm, left: 20mm, right: 20mm}, " +
+      "displayHeaderFooter: true, " +
+      `headerTemplate: '<div style="width:100%;font-size:3mm;border-bottom:1pt solid black;margin:8mm 20mm 0;display:flex;justify-content:space-between;"><span class="title"></span><span>${today}</span></div>', ` +
+      `footerTemplate: '<div style="width:100%;font-size:3mm;text-align:center;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>'}`;
+
+    const fm = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!fm) return `---\n${defaults}\n---\n${markdown}`;
+    if (/^puppeteer:/m.test(fm[1])) return markdown;
+    return markdown.replace(/^---\r?\n/, `---\n${defaults}\n`);
   },
 
   onDidParseMarkdown: async function (html) {

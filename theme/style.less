@@ -6,6 +6,7 @@
  *  - This opens the `style.less` file where you can override existing styles
  *  - Default file location:
  *    - Windows: `%USERPROFILE%/.crossnote/style.less`
+ *    - Linux: `~/.config/crossnote/style.less`
  *
  * For more information, visit:
  *  - https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css
@@ -13,7 +14,7 @@
 /*******************************************************************************
  * Custom Theme for Markdown Preview Enhanced
  *  - Author: midvok
- *  - Update: 2026-06-24
+ *  - Update: 2026-10-17
  *  - URL: https://github.com/midvok/markdown-preview-theme
  *
  * Custom classes for the markdown front-matter:
@@ -84,6 +85,11 @@
 // {true, false}
 @click-to-zoom: false;
 
+// Zoom diagrams
+@zoom-d2: 0.75;
+@zoom-mermaid: 0.75;
+@zoom-plantuml: 1;
+
 #enable-theme() {
   /* === Setup Icons & Fonts === */
   #import-icons();
@@ -113,6 +119,7 @@
     #style--blockquotes();
     #style--callouts();
     #style--tables();
+    #style--diagrams();
 
     // Extra styles
     #extra--table-styles();
@@ -562,7 +569,7 @@
   --code-inline-align: 0.03em;
 }
 #set-sans-family(@font) when (@font="Public Sans") {
-  --font-family: "Public Sans", "Segoe UI", Calibri, sans-serif;
+  --font-family: "Public Sans", "DejaVu Sans", sans-serif;
   --font-size: 14px;
   --ui-font-size: 14px;
   --line-height: 1.75;
@@ -610,7 +617,7 @@
 }
 
 #set-serif-family(@font) when (@font="Noto Serif") {
-  --font-family: "Noto Serif", Cambria, "Times New Roman", serif;
+  --font-family: "Noto Serif", "DejaVu Serif", serif;
   --font-size: 14px;
   --ui-font-size: 13.5px;
   --line-height: 1.75;
@@ -622,7 +629,7 @@
   --code-inline-align: 0.04em;
 }
 #set-serif-family(@font) when (@font="PT Serif") {
-  --font-family: "PT Serif", Cambria, "Times New Roman", serif;
+  --font-family: "PT Serif", "DejaVu Serif", serif;
   --font-size: 14px;
   --ui-font-size: 14px;
   --line-height: 1.75;
@@ -1025,6 +1032,7 @@
     figure,
     blockquote,
     .admonition,
+    .callout,
     img {
       break-inside: avoid;
       page-break-inside: avoid;
@@ -1664,28 +1672,45 @@
 // Style Callouts
 //==============================================================================
 #style--callouts() {
+  // Apply @rules to every callout type in @names, in both syntaxes:
+  // MkDocs:  .admonition.note
+  // GitHub:  .callout[data-callout="note"]
+  ._callout-type(@names; @rules) {
+    each(@names, {
+      &.@{value},
+      &[data-callout="@{value}" i] {
+        @rules();
+      }
+    });
+  }
+
   ._set-callout(@color, @icon: "edit", @text-darken: 20,
     @bg-alpha: 0.09, @border-alpha: 0.45, @edge-alpha: 0.55, @icon-alpha: 0.6) {
     // Text color
     &,
-    :is(strong, b) {
+    :is(strong, b),
+    > .admonition-title,
+    > .callout-title {
       .css-color-darken(color, @color, @text-darken);
     }
+
     // Bg and border colors
     .css-color-alpha(background-color, @color, @bg-alpha);
     .css-color-alpha(border-color, @color, @border-alpha);
     .css-color-alpha(border-left-color, @color, @edge-alpha);
 
-    > .admonition-title {
+    > .admonition-title,
+    > .callout-title {
       .css-color-alpha(background-color, @color, @bg-alpha * 1.45);
-    }
-    > .admonition-title::before {
-      content: @icon;
-      .css-color-alpha(color, @color, @icon-alpha);
+      &::before {
+        content: @icon;
+        .css-color-alpha(color, @color, @icon-alpha);
+      }
     }
   }
 
-  .admonition {
+  .admonition,
+  .callout {
     position: static;
     overflow: visible;
 
@@ -1701,7 +1726,8 @@
     margin: 1.25rem 0 1.5rem;
 
     // Title
-    > .admonition-title {
+    > .admonition-title,
+    > .callout-title {
       display: flex;
       gap: 0;
       align-items: center;
@@ -1736,11 +1762,18 @@
     }
 
     // Reduce margins for content inside callouts
-    > .admonition-title + * {
-      margin-top: 0.75rem;
+    > .admonition-title,
+    > .callout-title {
+      + * {
+        margin-top: 0.75rem;
+      }
+      + p {
+        margin-top: 0.5rem;
+      }
     }
-    > .admonition-title + p {
-      margin-top: 0.5rem;
+
+    p {
+      padding: 0;
     }
     p,
     p + p,
@@ -1761,7 +1794,7 @@
     }
 
     // Margin for the last item inside the callout
-    > :not(.admonition-title, pre, table, img):last-child {
+    > :not(.admonition-title, .callout-title, pre, table, img):last-child {
       margin-bottom: 0.75rem;
     }
 
@@ -1769,60 +1802,48 @@
     ._set-callout(var(--color-blue));
 
     // Particular callout styles
-    &.note {
+    ._callout-type(note; {
       ._set-callout(var(--color-blue), "edit");
-    }
-    &.abstract,
-    &.summary,
-    &.tldr {
+    });
+    ._callout-type(abstract, summary, tldr; {
       ._set-callout(var(--color-blue), "subject");
-    }
-    &.info {
+    });
+    ._callout-type(info; {
       ._set-callout(var(--color-blue), "info");
-    }
-    &.todo {
+    });
+    ._callout-type(todo; {
       ._set-callout(var(--color-purple), "assignment_turned_in");
-    }
-    &.tip,
-    &.hint,
-    &.important {
+    });
+    ._callout-type(tip, hint, important; {
       ._set-callout(var(--color-green), "lightbulb");
-    }
-    &.success,
-    &.check,
-    &.done {
+    });
+    ._callout-type(success, check, done; {
       ._set-callout(var(--color-green), "check_circle");
-    }
-    &.question,
-    &.help,
-    &.faq {
+    });
+    ._callout-type(question, help, faq; {
       ._set-callout(var(--color-yellow), "help", @text-darken: 25, @border-alpha: 0.5, @edge-alpha: 0.6);
-    }
-    &.warning,
-    &.caution,
-    &.attention {
+    });
+    ._callout-type(warning, caution, attention; {
       ._set-callout(var(--color-yellow), "warning", @text-darken: 25, @border-alpha: 0.5, @edge-alpha: 0.6);
-    }
-    &.failure,
-    &.fail,
-    &.missing {
+    });
+    ._callout-type(failure, fail, missing; {
       ._set-callout(var(--color-red), "dangerous");
-    }
-    &.danger,
-    &.error {
+    });
+    ._callout-type(danger, error; {
       ._set-callout(var(--color-red), "report");
-    }
-    &.bug {
+    });
+    ._callout-type(bug; {
       ._set-callout(var(--color-red), "bug_report");
-    }
-    &.example {
+    });
+    ._callout-type(example; {
       ._set-callout(var(--color-blue), "book");
-    }
-    &.quote {
+    });
+    ._callout-type(quote; {
       ._set-callout(var(--text-muted), "format_quote");
-    }
+    });
   }
 }
+
 //==============================================================================
 // Tables
 //==============================================================================
@@ -1981,6 +2002,44 @@
     // Highlight row under cursor
     tr:hover > td {
       background-color: var(--table-hover-bg);
+    }
+  }
+}
+
+//==============================================================================
+// Diagrams
+//==============================================================================
+#style--diagrams() {
+  // === D2 Diagrams ===
+  .d2-diagram {
+    > svg {
+      max-width: 100%;
+      height: auto !important;
+      zoom: @zoom-d2;
+    }
+
+    // Transparent background
+    svg.d2-svg > rect:first-child {
+      fill: transparent;
+    }
+  }
+
+  // === Mermaid Diagrams ===
+  .mermaid {
+    > svg {
+      zoom: @zoom-mermaid;
+    }
+  }
+
+  // === PlantUML Diagrams ===
+  .puml {
+    > svg {
+      max-width: 100%;
+      height: auto !important;
+      zoom: @zoom-plantuml;
+
+      // Transparent background
+      background: transparent !important;
     }
   }
 }
@@ -2436,6 +2495,11 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+      }
+
+      // Strip nested links from headings
+      a:not(.md-toc-link) {
+        display: none !important;
       }
     }
 

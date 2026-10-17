@@ -4,13 +4,13 @@ A highly customizable theme designed for the VS Code Extension [Markdown Preview
 
 **Main Features**:
 
-- **Clean LESS stylesheet**: Easily modify variables, change fonts, and toggle specific theme components.
-- **Improved print layout**: Dedicated style for PDF export, handling page breaks and margins more reliably.
-- **Visual enhancements**: Colorful headings and a built-in _"click-to-zoom"_ effect for images.
-- **Heading numbering**: Toggle heading numbering starting from H1 or H2.
-- **Front-matter configuration**: Apply custom CSS classes via Markdown YAML front matter to style the entire document.
-- **Utility CSS classes**: Additional classes for fine-grained layout control directly within your Markdown.
-- **Customized TOC**: Control the visible depth of the Table of Contents tree in the sidebar.
+- **Clean Less stylesheet**: Change fonts, adjust variables, and toggle individual theme components.
+- **Improved print layout**: A dedicated PDF export style that handles page breaks and margins more reliably.
+- **Visual enhancements**: Colorful headings, improved table styles, and hover tooltips.
+- **Heading numbering**: Number headings automatically, starting from H1 or H2.
+- **Front matter configuration**: Style the whole document with CSS classes set in the YAML front matter.
+- **Utility CSS classes**: Fine-tune the layout directly in your Markdown.
+- **Customizable TOC**: Limit how many heading levels the sidebar Table of Contents shows.
 
 ![alt text](https://i.imgur.com/jnaiwSA.png)
 
@@ -26,7 +26,9 @@ There are two ways to apply the theme stylesheet:
   - Replace its contents with the theme file located at `theme/style.less`.
 - **Option 2**:
   - Locate the `style.less` file in your home directory.
-  - The default path on Windows is: `%USERPROFILE%\.crossnote\style.less`.
+  - The default path is:
+    - Windows: `%USERPROFILE%\.crossnote\style.less`
+    - Linux: `~/.config/crossnote/style.less`
   - Replace it with the theme file `theme/style.less`.
 
 ## Theme Customization
@@ -84,7 +86,7 @@ This theme supports the following classes:
 | `simple-table`             | Apply simplified table styling                  |
 | `[x\|y\|xy\|no]line-table` | Control which internal borders appear in tables |
 | `nohead-table`             | Hide the table header row                       |
-| `dense-table `             | Reduce table cell padding                       |
+| `dense-table`              | Reduce table cell padding                       |
 
 **Example**:
 
@@ -126,7 +128,7 @@ For more complex layouts, you can wrap your Markdown in HTML tags like `<div>` o
 | `grid-cols-[n]`       | Create a **CSS grid** layout with `n` columns                |
 | `grid-cols-auto`      | Create a **CSS grid** layout with `auto-fit` columns         |
 | `flex`                | Apply a **Flexbox** container to child elements              |
-| `float-[left\|right]` | Allow to wrap text around images set to float left or right  |
+| `float-[left\|right]` | Wrap text around images floated to the left or right         |
 
 **Example**: Flexbox layout to display tables side by side
 
@@ -155,37 +157,6 @@ For more complex layouts, you can wrap your Markdown in HTML tags like `<div>` o
 ![alt text](https://i.imgur.com/fZiM8d1.png)
 
 ## Extension Tweaks
-
-### Support GitHub Syntax for Admonitions
-
-The **MPE** extension natively supports only the [MKDocs syntax](https://squidfunk.github.io/mkdocs-material/reference/admonitions/) for admonitions.
-
-If you also want to support the **GitHub callout syntax**, you need to extend the Markdown parser used by the extension:
-
-- Run the command **Markdown Preview Enhanced: Extend Parser (Global)**.
-- This opens the `parser.js` file.
-- Override the `onWillParseMarkdown` hook with the follwing [code snippet](https://github.com/shd101wyy/vscode-markdown-preview-enhanced/issues/1911).
-
-```js
-// Enable GitHub syntax for admonitions
-// https://github.com/shd101wyy/vscode-markdown-preview-enhanced/issues/1911
-onWillParseMarkdown: async function (markdown) {
-    return new Promise((resolve, reject) => {
-        const calloutRegex = /^> ?\[!(?<type>\w+)\](?<title>.*)?\r?\n(?<content>(?:>.*\r?\n?)*)/gm;
-        const newMarkdown = markdown.replace(calloutRegex, (match, type, title, content) => {
-            const admonitionType = type.toLowerCase();
-            const admonitionTitle = title && title.trim() ? `${title.trim()}` : "";
-            const admonitionContent = content
-                .replace(/^> ?/gm, "")
-                .split(/\r?\n/)
-                .map((line) => `    ${line}`)
-                .join("\n");
-            return `!!! ${admonitionType} ${admonitionTitle}\n${admonitionContent}\n\n`;
-        });
-        return resolve(newMarkdown);
-    });
-},
-```
 
 ### Configure PDF Export
 
@@ -243,4 +214,46 @@ The `headerTemplate` and `footerTemplate` must be valid HTML with the following 
   <div style="width: 100%; font-size: 3mm; text-align: center">
     <span class="pageNumber"></span>/<span class="totalPages"></span>
   </div>
+  ```
+
+### Default PDF Export Options
+
+Adding the `puppeteer` options to every document gets repetitive. The [`tweaks/parser.js`](tweaks/parser.js) file adds them automatically, through a Markdown parser hook that runs before MPE reads the front matter.
+
+- If a document has **no** `puppeteer` key, the hook adds the default options:
+  - A4 format, scale `0.85`, printed backgrounds and custom margins
+  - Header with the document `title` on the left and the export date (`YYYY-MM-DD`) on the right
+  - Footer with centered `pageNumber` / `totalPages`
+- If a document has its **own** `puppeteer` key, the hook changes nothing. The document's options **replace all defaults**; they are not merged.
+
+To install it, put `parser.js` alongside the `style.less` file in MPE's config folder. To change the defaults, edit the `defaults` string in `parser.js`; it uses the same YAML options as the front matter above.
+
+## Theme Development
+
+If you edit the theme in this repository, you can deploy it (together with `tweaks/parser.js`) straight to MPE's config folder with [just](https://github.com/casey/just):
+
+```sh
+just deploy   # Copy style.less and parser.js to MPE's config folder
+just watch    # Re-deploy whenever the theme changes (requires watchexec)
+```
+
+### Deploy on Save
+
+The repository includes a VS Code workspace config that runs `just deploy` every time you save `style.less` or `parser.js`.
+
+- Install the [Run on Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) extension (VS Code suggests it when you open the folder).
+- The command is configured in `.vscode/settings.json`:
+
+  ```json
+  {
+      "emeraldwalk.runonsave": {
+          "commands": [
+              {
+                  "match": "(style\\.less|parser\\.js)$",
+                  "cmd": "just -f ${workspaceFolder}/justfile deploy",
+                  "autoShowOutputPanel": "error"
+              }
+          ]
+      }
+  }
   ```

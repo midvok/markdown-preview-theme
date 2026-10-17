@@ -1,21 +1,16 @@
 ---
 title: Markdown — Custom CSS Classes
 class: "headnum"
-puppeteer:
-  format: A4
-  scale: 0.85
-  printBackground: true
-  margin:
-    top: 20mm
-    bottom: 15mm
-    left: 15mm
-    right: 15mm
-  displayHeaderFooter: true
-  headerTemplate: "<div>/div>"
-  footerTemplate: '<div style="width:100%;font-size:3mm;text-align:center;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>'
+markdown:
+  image_dir: img
+  path: markdown-utility-classes.gfm.md
+  ignore_from_front_matter: true
 ---
 
 # Markdown Custom Utility Classes
+
+> [!WARNING]
+> This document is intended to test the features of the **Markdown Preview Enhanced** (MPE) extension. Other Markdown processors, such as **GitHub Flavored Markdown**, may render it differently.
 
 ## Introduction
 
@@ -51,7 +46,7 @@ Allow special fenced syntax for native Div blocks. A Div starts with a fence con
 **Example**:
 
 ```markdown
-:::.class1
+:::class1
 :::
 
 :::{.class1 .class2}

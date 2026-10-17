@@ -1,0 +1,11 @@
+{
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "(style\\.less|parser\\.js)$",
+                "cmd": "just -f ${workspaceFolder}/justfile deploy",
+                "autoShowOutputPanel": "error"
+            }
+        ]
+    }
+}

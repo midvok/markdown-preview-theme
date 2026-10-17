@@ -1,21 +1,12 @@
 ---
 title: Markdown Syntax Guide
 class: "headnum"
-puppeteer:
-  format: A4
-  scale: 0.85
-  printBackground: true
-  margin:
-    top: 20mm
-    bottom: 15mm
-    left: 15mm
-    right: 15mm
-  displayHeaderFooter: true
-  headerTemplate: '<div style="width:100%;font-size:3mm;border-bottom:1pt solid black;margin:6mm 15mm 0;display:flex;justify-content:space-between;"><span class="title"></span><span><span class="pageNumber"></span>/<span class="totalPages"></span></span></div>'
-  footerTemplate: '<div style="width:100%;font-size:3mm;text-align:center;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>'
 ---
 
 # Markdown Syntax Guide
+
+> [!WARNING]
+> This document is intended to test the features of the **Markdown Preview Enhanced** (MPE) extension. Other Markdown processors, such as **GitHub Flavored Markdown**, may render it differently.
 
 - [Markdown Syntax Guide](#markdown-syntax-guide)
   - [This is a heading H2](#this-is-a-heading-h2)
@@ -31,7 +22,7 @@ puppeteer:
     - [Tables {.page-break}](#tables-page-break)
   - [Extended Formatting Syntax](#extended-formatting-syntax)
     - [Math Typesetting](#math-typesetting)
-    - [Admonitions (Callouts)](#admonitions-callouts)
+    - [Admonitions (Alerts, Callouts)](#admonitions-alerts-callouts)
 
 **Markdown** is a **lightweight markup language** used for formatting plain text. Created by **_John Gruber_** in 2004, Markdown was designed to be both _easy-to-read_ and _easy-to-write_.
 
@@ -512,13 +503,34 @@ $$
 \end{pmatrix}
 $$
 
-### Admonitions (Callouts)
+### Admonitions (Alerts, Callouts)
 
-**Admonitions** (also called **alerts** or **callouts**) highlight important information, such as warnings, tips, or notes using a visually distinct block. While standard Markdown does not support alerts, many Markdown processors add them through custom syntax.
+**Admonitions** (also called **alerts** or **callouts**) are visually distinct blocks that highlight important information such as notes, tips, or warnings. Standard Markdown has no syntax for them, but many Markdown processors add their own.
 
-By default, a callout’s **title** is the type identifier shown in title case. This can be customized by adding text after the identifier.
+By default, a callout’s **title** is its type in title case. To set a custom title, add text after the type identifier.
 
-#### GitHub Flavored Markdown & Obsidian
+##### GitHub Flavored Markdown
+
+**GitHub** supports only five alert types: `note`, `tip`, `important`, `warning`, and `caution`. Custom titles are **not supported**.
+
+##### Obsidian Flavored Markdown
+
+**Obsidian** supports all five GitHub types plus several more (aliases separated by `/`): `note`, `abstract`/`summary`/`tldr`, `info`, `todo`, `tip`/`hint`/`important`, `success`/`check`/`done`, `question`/`help`/`faq`, `warning`/`caution`/`attention`, `failure`/`fail`/`missing`, `danger`/`error`, `bug`, `example`, and `quote`/`cite`. Custom titles are supported.
+
+##### Markdown Preview Enhanced
+
+**MPE** originally supported only the [MkDocs syntax](https://squidfunk.github.io/mkdocs-material/reference/admonitions/) for admonitions. Since version 0.8.33, it also supports the GitHub alert syntax, including all Obsidian callout types.
+
+#### GitHub Flavored & Obsidian Syntax
+
+###### Syntax
+
+```markdown
+> [!NOTE] Title
+> General remarks or supplementary information.
+```
+
+###### Examples
 
 > [!note] Example `[!note]` Callout
 >
@@ -526,7 +538,7 @@ By default, a callout’s **title** is the type identifier shown in title case. 
 >
 > Common **_use cases_** for a note callout include:
 >
-> - Adding background context or clarification without distracting from the main topic.
+> - Adding background or clarification without distracting from the main topic.
 > - Documenting small but important details, flags, or configuration hints.
 >
 > Math example using $\text{\LaTeX}$ syntax:
@@ -543,60 +555,62 @@ By default, a callout’s **title** is the type identifier shown in title case. 
 > General **remarks** or **supplementary information** that adds context without interrupting the main flow.
 
 > [!abstract]
-> A brief **summary** or high-level overview of the content that follows.
+> A brief **summary** or high-level overview of what follows.
 > **Aliases**: `summary`, `tldr`
 
 > [!info]
-> Neutral, factual **information** meant to inform or clarify a concept.
+> Neutral, factual **information** that explains or clarifies a concept.
 
 > [!todo]
-> Tasks, action items, or things that still need **to be done**.
+> Tasks, action items, or anything still **to be done**.
 
 > [!tip]
-> Helpful **advices**, **best practices**, or **suggestions** to improve outcomes.
+> Helpful **advice**, **best practices**, or **suggestions** for better results.
 > **Aliases**: `hint`, `important`
 
 > [!success]
-> Confirmation that something **worked**, was **completed**, or achieved as expected.
+> Confirmation that something **worked**, was **completed**, or went as expected.
 > **Aliases**: `check`, `done`
 
 > [!question]
-> Questions, prompts for thinking, or areas where clarification is needed.
+> Open questions, prompts for reflection, or points that need clarification.
 > **Aliases**: `help`, `faq`
 
 > [!warning]
-> Important notices about **potential issues** or situations requiring caution.
+> Notices about **potential issues** or situations that call for caution.
 > **Aliases**: `caution`, `attention`
 
 > [!failure]
-> Descriptions of **unsuccessful** outcomes, **mistakes**, or unmet requirements.
+> **Unsuccessful** outcomes, **mistakes**, or unmet requirements.
 > **Aliases**: `fail`, `missing`
 
 > [!danger]
-> Critical alerts about serious **risks**, **errors**, or situations that may cause harm.
+> Critical alerts about serious **risks**, **errors**, or potential harm.
 > **Alias**: `error`
 
 > [!bug]
-> Known **defects**, glitches, or **unintended behavior** in a system or process.
+> Known **defects**, glitches, or **unintended behavior**.
 
 > [!example]
-> Concrete illustrations or **sample usage** to demonstrate a concept in practice.
+> Concrete illustrations or **sample usage** that show a concept in practice.
 
 > [!quote]
-> Quoted text, **citations**, or **references** from an external source.
+> Quoted text, **citations**, or **references** from external sources.
 > **Alias**: `cite`
 
 <div class="page-break"></div>
 
-#### Markdown Preview Enhanced (VS Code Plugin)
+#### MkDocs Markdown
 
-The **MPE** extension natively supports only the [MKDocs syntax](https://squidfunk.github.io/mkdocs-material/reference/admonitions/) for admonitions.
+###### Syntax
 
-If you also want to support the **GitHub callout syntax**, you need to extend the Markdown parser used by the extension:
+```markdown
+!!! note
 
-- Run the command **Markdown Preview Enhanced: Extend Parser (Global)**.
-- This opens the `parser.js` file.
-- Override the `onWillParseMarkdown` hook with the follwing [code snippet](https://github.com/shd101wyy/vscode-markdown-preview-enhanced/issues/1911).
+    General remarks or supplementary information.
+```
+
+###### Examples
 
 !!! note
 
@@ -604,44 +618,44 @@ If you also want to support the **GitHub callout syntax**, you need to extend th
 
 !!! abstract
 
-    A brief summary or high-level overview of the content that follows.
+    A brief summary or high-level overview of what follows.
 
 !!! info
 
-    Neutral, factual information meant to inform or clarify a concept.
+    Neutral, factual information that explains or clarifies a concept.
 
 !!! tip
 
-    Helpful advice, best practices, or suggestions to improve outcomes.
+    Helpful advice, best practices, or suggestions for better results.
 
 !!! success
 
-    Confirmation that something worked, was completed, or achieved as expected.
+    Confirmation that something worked, was completed, or went as expected.
 
 !!! question
 
-    Questions, prompts for thinking, or areas where clarification is needed.
+    Open questions, prompts for reflection, or points that need clarification.
 
 !!! warning
 
-    Important notices about potential issues or situations requiring caution.
+    Notices about potential issues or situations that call for caution.
 
 !!! failure
 
-    Descriptions of unsuccessful outcomes, mistakes, or unmet requirements.
+    Unsuccessful outcomes, mistakes, or unmet requirements.
 
 !!! danger
 
-    Critical alerts about serious risks, errors, or situations that may cause harm.
+    Critical alerts about serious risks, errors, or potential harm.
 
 !!! bug
 
-    Known defects, glitches, or unintended behavior in a system or process.
+    Known defects, glitches, or unintended behavior.
 
 !!! example
 
-    Concrete illustrations or sample usage to demonstrate a concept in practice.
+    Concrete illustrations or sample usage that show a concept in practice.
 
 !!! quote
 
-    Quoted text, citations, or references from an external source.
+    Quoted text, citations, or references from external sources.
